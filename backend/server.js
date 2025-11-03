@@ -1,14 +1,20 @@
 require('dotenv').config()
 
 const express = require('express')
+const classRoutes = require('./routes/classes')
 
 //express app
 const app = express()
 
-//routes
-app.get('/', (req, res) => {
-    res.json({mssg: 'Welcome!'})
+// middleware, invoke next parameter to be able to move onto next middleware
+app.use(express.json()) //looks if request has body
+app.use((req, res, next) => {
+    console.log(req.path, req.method)
+    next()
 })
+
+//routes
+app.use('/api/classes', classRoutes)
 
 //listen for requests
 app.listen(process.env.PORT, () => {
