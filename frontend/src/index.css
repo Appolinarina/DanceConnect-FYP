@@ -3,7 +3,8 @@
 
 /* layout */
 :root {
-  --primary: #1aac83;
+  --primary: #413620;
+  --secondary: #9C6615;
   --error: #e7195a;
 }
 body {
@@ -36,4 +37,39 @@ header a {  /* anchor tags */
   max-width: 1400px;
   padding: 20px;
   margin: 0 auto;
+}
+
+/* homepage */
+.home {
+  display: grid;
+  grid-template-columns: 3fr 1fr; /*3 fractions on left, 1 on right (so workout details on left, save space on right for add new dance class form) */
+  gap: 100px;
+}
+.danceclass-details { /*boxes for each danceclass*/
+  background: #fff;
+  border-radius: 4px;
+  margin: 20px auto;
+  padding: 20px;
+  position: relative;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+}
+.danceclass-details h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+  color: var(--secondary);
+}
+.danceclass-details p {
+  margin: 0;
+  font-size: 0.9em;
+  color: #555;
+}
+.danceclass-details span { /*delete button */
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background: #f1f1f1;
+  padding: 6px;
+  border-radius: 50%;
+  color: #333;
 }
