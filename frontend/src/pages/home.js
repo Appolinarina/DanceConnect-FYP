@@ -2,13 +2,14 @@ import { useEffect, useState } from "react"
 
 //components
 import DanceClassDetails from '../components/DanceClassDetails'
+import DanceClassForm from '../components/DanceClassForm'
 
 const Home = () => {
     const [danceclasses, setDanceClasses] = useState(null)
 
     useEffect(() =>{
         const fetchDanceClasses = async () => {
-            const response = await fetch('api/danceclasses') // fetch data from backend (proxies request to localhost:4000)
+            const response = await fetch('/api/danceclasses') // fetch data from backend (proxies request to localhost:4000)
             const json = await response.json() // pass json to create array of objects
 
             if (response.ok) {
@@ -25,6 +26,7 @@ const Home = () => {
                     <DanceClassDetails key={danceclass._id} danceclass={danceclass}/> //find class id, and output each classes' title
                 ))}
             </div>
+            <DanceClassForm />
         </div>
     )
 }
