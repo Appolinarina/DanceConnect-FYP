@@ -26,10 +26,41 @@ const getClass = async (req, res) => {
 
 //create new class
 const createClass = async (req, res) => {
-    const {title, dance_style, dance_level, location, price} = req.body
+    const {title, dance_style, dance_level, location, date, capacity, price} = req.body
+
+    let emptyFields = [] 
+
+    //detect empty fields when sending POST request
+    if(!title) {
+        emptyFields.push('title')
+    }
+    if(!dance_style) {
+        emptyFields.push('dance_style')
+    }
+    if(!dance_level) {
+        emptyFields.push('dance_level')
+    }
+    if(!location) {
+        emptyFields.push('location')
+    }
+    if(!date) {
+        emptyFields.push('date')
+    }
+    if(!capacity) {
+        emptyFields.push('capacity')
+    }
+    if(!price) {
+        emptyFields.push('price')
+    }
+
+    //if any fields left empty
+    if(emptyFields.length > 0){
+        return res.status(400).json({error:'Please fill in all required fields', emptyFields})
+    }
+
     //add doc to db
         try {
-            const danceclass = await danceClass.create({title, dance_style, dance_level, location, price})
+            const danceclass = await danceClass.create({title, dance_style, dance_level, location, date, capacity, price})
             res.status(200).json(danceclass)
         } catch (error){
             res.status(400).json({error: error.message})
@@ -70,8 +101,6 @@ const updateClass = async (req, res) => {
     res.status(200).json(danceclass)
 
 }
-
-
 
 module.exports = {
     getClasses,

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const classSchema = new Schema({
+const danceClassSchema = new Schema({
     title: {
         type: String,
         required: true
@@ -19,9 +19,18 @@ const classSchema = new Schema({
         type: String,
         required: true
     },
+    date: {
+        type: Date,
+        required: true
+    },
+    capacity: {
+        type: Number,
+        required: true
+    },
     price: {
-        type: Number
+        type: Number,
+        required: true
     }
 }, {timestamps: true}) //to automatically add timestamps property
 
-module.exports = mongoose.model('danceClass', classSchema)
+module.exports = mongoose.model('danceClass', danceClassSchema)
