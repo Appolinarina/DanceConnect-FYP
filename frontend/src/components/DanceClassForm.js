@@ -44,7 +44,7 @@ const DanceClassForm = () => {
             setCapacity('')
             setPrice('')
             console.log('New Dance Class Created', json)
-            dispatch({type: 'CREATE_DANCECLASSES', payload: json}) //dispatch only if response is ok, to update context state, so to re-render the home component
+            dispatch({type: 'CREATE_DANCECLASS', payload: json}) //dispatch only if response is ok, to update context state, so to re-render the home component
         }
     }
 

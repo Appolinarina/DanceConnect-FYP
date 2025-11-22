@@ -9,9 +9,13 @@ export const danceclassReducer = (state, action) => { //previous state (reliable
             return { //return danceclass property inside the object
                 danceclasses: action.payload // payload property (that is passed into dispath func.) is array of all danceclasses, & updates line 24 from null to whatever payload on the action is (array of classes from server)
             }
-        case 'CREATE_DANCECLASSES':
+        case 'CREATE_DANCECLASS':
             return { // single new danceclass object
                 danceclasses: [action.payload, ...state.danceclasses] // take existing classes, then spread all states (array of pre-existing class objects), with add new class to top
+            }
+        case 'DELETE_DANCECLASS':
+            return { //filter through all classes, True if we want it to remain, False to take it out of new array
+                danceclasses: state.danceclasses.filter((danceclass) => danceclass._id !== action.payload._id) //if class isn't in deleted payload, keep it
             }
         default:
             return state
