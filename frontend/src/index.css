@@ -83,6 +83,10 @@ header a {  /* anchor tags */
 label, input {
   display: block;
 }
+.create h3 {
+  font-size: 1.2em;
+  color: var(--secondary);
+}
 
 input {
   padding: 10px;
@@ -95,7 +99,7 @@ input {
 }
 
 form button {  /* submit button */
-  background: var(--primary);
+  background: var(--secondary);
   border: 0;
   color: #fff;
   padding: 10px;

@@ -19,7 +19,7 @@ const Home = () => {
         }
 
         fetchDanceClasses()
-    }, []) // empty array to only fire function once (on render)
+    }, [dispatch]) // rerurn useEffect if dispatch functions changes
     return (
         <div className="home">
             <div className="danceclasses">
