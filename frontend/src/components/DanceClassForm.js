@@ -13,6 +13,7 @@ const DanceClassForm = () => {
     const [price, setPrice] = useState('') 
 
     const [error, setError] = useState(null) 
+    const [emptyFields, setEmptyFields] = useState([]) //state for empty fields
 
 
     const handleSubmit = async (e) => {
@@ -30,8 +31,8 @@ const DanceClassForm = () => {
         const json = await response.json() //response coming in from danceClassController json response
 
         if (!response.ok) {
-            
             setError(json.error)
+            setEmptyFields(json.emptyFields)
         }
 
         if (response.ok) {
@@ -43,6 +44,8 @@ const DanceClassForm = () => {
             setDate('')
             setCapacity('')
             setPrice('')
+            setError(null)
+            setEmptyFields([])
             console.log('New Dance Class Created', json)
             dispatch({type: 'CREATE_DANCECLASS', payload: json}) //dispatch only if response is ok, to update context state, so to re-render the home component
         }
@@ -57,41 +60,47 @@ const DanceClassForm = () => {
                 type="text"
                 onChange={(e) => setTitle(e.target.value)} //fires function when user types into field, (e) takes in event object, target is the input field
                 value={title} //opposite-way data binding, if the title value gets changed from outside the form (i.e. upon form reset, changes back to None)
+                className={emptyFields.includes('title') ? 'error' : ''} //apply error class if title in emptyFields, if not, take away the class
             />
 
             <label>Dance Style:</label>
             <input
                 type="text"
                 onChange={(e) => setDanceStyle(e.target.value)} 
-                value={dance_style} 
+                value={dance_style}
+                className={emptyFields.includes('dance_style') ? 'error' : ''}
             />
 
             <label>Class Level:</label>
             <input
                 type="text"
                 onChange={(e) => setDanceLevel(e.target.value)} 
-                value={dance_level} 
+                value={dance_level}
+                className={emptyFields.includes('dance_level') ? 'error' : ''}
             />
 
             <label>Location:</label>
             <input
                 type="text"
                 onChange={(e) => setLocation(e.target.value)} 
-                value={location} 
+                value={location}
+                className={emptyFields.includes('location') ? 'error' : ''}
             />
 
             <label>Date:</label>
             <input
                 type="date"
                 onChange={(e) => setDate(e.target.value)} 
-                value={date} 
+                value={date}
+                className={emptyFields.includes('date') ? 'error' : ''}
             />
             
             <label>Capacity:</label>
             <input
                 type="number"
                 onChange={(e) => setCapacity(e.target.value)} 
-                value={capacity} 
+                value={capacity}
+                className={emptyFields.includes('capacity') ? 'error' : ''}
             />
 
             <label>Price:</label>
@@ -103,6 +112,7 @@ const DanceClassForm = () => {
                     if (price !== "") setPrice(parseFloat(price).toFixed(2)); //onBlur 2 d.p. format shows up after user clicks away
                 }}
                 value={price}
+                className={emptyFields.includes('price') ? 'error' : ''}
             /> 
             <button>Create Class</button>
             {error && <div className="error">{error}</div>} 
