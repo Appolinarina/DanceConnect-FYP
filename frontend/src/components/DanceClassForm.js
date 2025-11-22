@@ -1,6 +1,8 @@
 import { useState } from "react"
+import { useDanceClassesContext } from "../hooks/useDanceClassContext"
 
 const DanceClassForm = () => {
+    const {dispatch} = useDanceClassesContext()
     //create None state for all properties for the form for user to type into
     const [title, setTitle] = useState('') 
     const [dance_style, setDanceStyle] = useState('') 
@@ -42,6 +44,7 @@ const DanceClassForm = () => {
             setCapacity('')
             setPrice('')
             console.log('New Dance Class Created', json)
+            dispatch({type: 'CREATE_DANCECLASSES', payload: json}) //dispatch only if response is ok, to update context state, so to re-render the home component
         }
     }
 

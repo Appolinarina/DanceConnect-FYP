@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import { useDanceClassesContext } from "../hooks/useDanceClassContext"
 
 //components
 import DanceClassDetails from '../components/DanceClassDetails'
 import DanceClassForm from '../components/DanceClassForm'
 
 const Home = () => {
-    const [danceclasses, setDanceClasses] = useState(null)
+    const {danceclasses, dispatch} = useDanceClassesContext() // danceclasses null initially, updates with dispatch
 
     useEffect(() =>{
         const fetchDanceClasses = async () => {
@@ -13,7 +14,7 @@ const Home = () => {
             const json = await response.json() // pass json to create array of objects
 
             if (response.ok) {
-                setDanceClasses(json)
+                dispatch({type: 'SET_DANCECLASSES', payload:json}) //update entire array of danceclasses (json data is the entire array)
             }
         }
 
