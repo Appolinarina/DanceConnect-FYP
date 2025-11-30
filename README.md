@@ -26,6 +26,7 @@ cd DanceConnect-FYP
 ```
 
 2. Install Dependencies
+
 Frontend
 ```bash
 cd frontend
@@ -46,6 +47,7 @@ MONGO_URI=your_mongodb_connection_string
 ```
 
 4. Run applications
+
 Backend
 ```bash
 npm run start
@@ -57,4 +59,5 @@ npm run
 ```
 
 Frontend runs on http://localhost:3000
+
 Backend runs on http://localhost:4000
