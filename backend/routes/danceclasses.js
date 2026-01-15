@@ -7,7 +7,7 @@ const {
     updateClass
 } = require('../controllers/danceclassController')
 
-const router = express.Router()
+const router = express.Router() // express router instance
 
 // GET all classes
 router.get('/', getClasses)
