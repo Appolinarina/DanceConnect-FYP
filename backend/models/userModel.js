@@ -17,7 +17,7 @@ const userSchema = new Schema ({
 })
 
 //static signup method
-userSchema.statics.signup = async (email, password) => { 
+userSchema.statics.signup = async function(email, password) { 
     //see if email exists in database, if it does, don't complete signup (email must be unique)
     const exists = await this.findOne({email})
 
