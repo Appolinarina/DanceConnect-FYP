@@ -1,4 +1,9 @@
 const User = require('../models/userModel') //user collection to save/create new documents
+const jsonwt = require('jsonwebtoken')
+
+const createToken = (_id) => {
+    return jsonwt.sign({_id}, process.env.SECRET, {expiresIn: '2d'})
+}
 
 //login user
 const loginUser = async (req, res) => {
@@ -11,7 +16,11 @@ const signupUser = async (req, res) => {
 
     try {
         const user = await User.signup(email, password) //signup function from userModel
-        res.status(200).json({email, user}) //send back email that the user signed up with, and the user object
+
+        //create json web token
+        const token = createToken(user._id)
+
+        res.status(200).json({email, token}) //send back email that the user signed up with, and the token
     } catch (error) {
         res.status(400).json({error: error.message})
     }
