@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { DanceClassesContextProvider } from './context/DanceClassContext';
+import { AuthContextProvider } from './context/AuthContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <DanceClassesContextProvider>
-      <App />
-    </DanceClassesContextProvider>
+    <AuthContextProvider>
+      <DanceClassesContextProvider>
+        <App />
+      </DanceClassesContextProvider>
+      </AuthContextProvider>
   </React.StrictMode>
 );

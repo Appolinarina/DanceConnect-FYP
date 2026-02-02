@@ -4,7 +4,7 @@ import { useContext } from "react";
 export const useDanceClassesContext = () => {
     const context = useContext(DanceClassContext) //return value of danceclass context
 
-    if (!context) {
+    if (!context) { //checks if in scope of context (so not used outside of the root app component)
         throw Error('useDanceClassContext must be used inside DanceClassesContextProvider')
     }
 
