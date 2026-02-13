@@ -130,6 +130,18 @@ nav a {
   margin-left: 10px;
 }
 
+/* logout button */
+nav button {
+  background: #fff;
+  color: var(--secondary);
+  border: 2px solid var(--secondary);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-family: "Poppins";
+  cursor: pointer;
+  font-size: 1em;
+}
+
 /* auth forms */
 form.signup, form.login {
   max-width: 400px;
