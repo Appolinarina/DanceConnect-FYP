@@ -6,8 +6,11 @@ const {
     deleteClass,
     updateClass
 } = require('../controllers/danceclassController')
+const requireAuth = require('../middleware/requireAuth')
 
 const router = express.Router() // express router instance
+
+router.use(requireAuth) //user authentication needed for the below routes
 
 // GET all classes
 router.get('/', getClasses)
