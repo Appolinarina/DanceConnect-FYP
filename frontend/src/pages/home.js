@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { useDanceClassesContext } from "../hooks/useDanceClassContext"
+import {useAuthContext} from "../hooks/useAuthContext"
 
 //components
 import DanceClassDetails from '../components/DanceClassDetails'
@@ -7,10 +8,17 @@ import DanceClassForm from '../components/DanceClassForm'
 
 const Home = () => {
     const {danceclasses, dispatch} = useDanceClassesContext() // danceclasses null initially, updates with dispatch
+    const {user} = useAuthContext()
 
     useEffect(() =>{
         const fetchDanceClasses = async () => {
-            const response = await fetch('/api/danceclasses') // fetch data from backend (proxies request to localhost:4000)
+
+            // fetch data from backend (proxies request to localhost:4000)
+            const response = await fetch('/api/danceclasses', {
+                headers: { 
+                    'Authorization': `Bearer ${user.token}` // send auth header with user token (if token valid, give access to endpoint)
+                }
+            }) 
             const json = await response.json() // pass json to create array of objects
 
             if (response.ok) {
@@ -18,8 +26,11 @@ const Home = () => {
             }
         }
 
-        fetchDanceClasses()
-    }, [dispatch]) // rerurn useEffect if dispatch functions changes
+        // if there is value for user, we fetch the classes
+        if (user) {
+            fetchDanceClasses()
+        }
+    }, [dispatch, user]) // rerurn useEffect if dispatch functions changes, (+ added user as dependency)
     return (
         <div className="home">
             <div className="danceclasses">

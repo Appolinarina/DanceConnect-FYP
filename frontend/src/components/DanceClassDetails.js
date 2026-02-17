@@ -1,4 +1,5 @@
 import { useDanceClassesContext } from "../hooks/useDanceClassContext"
+import { useAuthContext } from "../hooks/useAuthContext"
 
 //date fns
 import format from 'date-fns/format'
@@ -6,9 +7,20 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
 const DanceClassDetails = ({danceclass}) => {
     const { dispatch } = useDanceClassesContext()
+    const {user} = useAuthContext()
 
     const handleClick = async () => {
-        const response = await fetch('api/danceclasses/' + danceclass._id, {method: 'DELETE'}) //append class id to end of endpoint
+
+        if (!user) {
+            return
+        }
+
+        const response = await fetch('api/danceclasses/' + danceclass._id, { //append class id to end of endpoint
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
+        }) 
         const json = await response.json() //deleted document in json
 
         if (response.ok) {

@@ -1,8 +1,11 @@
 import { useState } from "react"
 import { useDanceClassesContext } from "../hooks/useDanceClassContext"
+import { useAuthContext } from "../hooks/useAuthContext"
 
 const DanceClassForm = () => {
     const {dispatch} = useDanceClassesContext()
+    const {user} = useAuthContext()
+
     //create None state for all properties for the form for user to type into
     const [title, setTitle] = useState('') 
     const [dance_style, setDanceStyle] = useState('') 
@@ -19,13 +22,19 @@ const DanceClassForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault() //prevents the default form submission upon refresh
 
+        if (!user) {
+            setError('You must be logged in')
+            return
+        }
+
         const danceclass = {title, dance_style, dance_level, location, date, capacity, price}
 
         const response = await fetch('/api/danceclasses', {
             method: 'POST',
             body: JSON.stringify(danceclass), //changes danceclass to JSON string, and sends as body
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}`
             }
         })
         const json = await response.json() //response coming in from danceClassController json response
@@ -107,9 +116,10 @@ const DanceClassForm = () => {
             <input
                 type="number"
                 step="0.01" //increment/decrement by 0.01 (i.e. to have 2 d.p.)
-                onChange={(e) => setPrice(e.target.value)} 
-                onBlur={() => { 
-                    if (price !== "") setPrice(parseFloat(price).toFixed(2)); //onBlur 2 d.p. format shows up after user clicks away
+                onChange={(e) => setPrice(e.target.value)}  
+                onBlur={() => {
+                    const n = Number(price)
+                    if (!Number.isNaN(n)) setPrice(n.toFixed(2)) //onBlur 2 d.p. format shows up after user clicks away
                 }}
                 value={price}
                 className={emptyFields.includes('price') ? 'error' : ''}

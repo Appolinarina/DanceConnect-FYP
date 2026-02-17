@@ -4,14 +4,14 @@ const User = require('../models/userModel')
 const requireAuth = async (req, res, next) => {
 
     //verify user is authenticated
-    const {authorisation} = req.headers //grab from headers (contains JWT)
+    const {authorization} = req.headers //grab from headers (contains JWT)
 
-    if (!authorisation) { //check if auth headers have value
-        return res.status(401).json({error: 'Authorisation token required'})
+    if (!authorization) { //check if auth headers have value
+        return res.status(401).json({error: 'Authorization token required'})
     }
 
     //get token if auth headers exist
-    const token = authorisation.split(' ')[1] // grab token only! (after space, grab 2nd half) (e.g. 'Bearer jopiwjoef.weofio.wpefowe')
+    const token = authorization.split(' ')[1] // grab token only! (after space, grab 2nd half) (e.g. 'Bearer jopiwjoef.weofio.wpefowe')
 
     try { 
         // verify token
@@ -20,7 +20,7 @@ const requireAuth = async (req, res, next) => {
         next() //fire next handler function (from danceclasses.js)
     } catch (error) {
         console.log(error)
-        res.status(401).json({error: 'Unauthorised request'})
+        res.status(401).json({error: 'Unauthorized request'})
     }
 }
 module.exports = requireAuth
