@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom' //navigate to redirect user
+import { useAuthContext } from './hooks/useAuthContext'
 
 //pages & components
 import Home from './pages/home' 
@@ -7,6 +8,7 @@ import Signup from './pages/signup'
 import Navbar from './components/Navbar'
 
 function App() {
+  const {user} = useAuthContext()
   return (  //all link components need to be inside BrowserRouter
     <div className="App"> 
       <BrowserRouter> 
@@ -15,15 +17,16 @@ function App() {
         <Routes>
           <Route
             path="/" //home page
-            element={<Home />} //element to render for route
+            //element to render for route
+            element={user ? <Home /> : <Navigate to="/login"/>} //if user authenticated, send to home. if not, redirect to login
           />
           <Route
             path="/login" //login page
-            element={<Login />} 
+            element={!user ? <Login /> : <Navigate to="/"/>} 
           />
           <Route
             path="/signup" //signup page
-            element={<Signup />} 
+            element={!user ? <Signup /> : <Navigate to="/"/>} 
           />
         </Routes>
       </div>
