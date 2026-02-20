@@ -3,7 +3,10 @@ const mongoose = require('mongoose')
 
 //get all classes
 const getClasses = async (req, res) => {
-    const danceclasses = await danceClass.find({}).sort({createdAt: -1}) //sort classes by newest first
+    const user_id = req.user._id
+
+    //show only docs created by the current logged in user
+    const danceclasses = await danceClass.find({user_id}).sort({createdAt: -1}) //sort classes by newest first
 
     res.status(200).json(danceclasses)
 }
@@ -60,7 +63,8 @@ const createClass = async (req, res) => {
 
     //add doc to db
         try {
-            const danceclass = await danceClass.create({title, dance_style, dance_level, location, date, capacity, price})
+            const user_id = req.user._id
+            const danceclass = await danceClass.create({title, dance_style, dance_level, location, date, capacity, price, user_id})
             res.status(200).json(danceclass)
         } catch (error){
             res.status(400).json({error: error.message})

@@ -15,7 +15,7 @@ const DanceClassDetails = ({danceclass}) => {
             return
         }
 
-        const response = await fetch('api/danceclasses/' + danceclass._id, { //append class id to end of endpoint
+        const response = await fetch('/api/danceclasses/' + danceclass._id, { //append class id to end of endpoint
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${user.token}`
