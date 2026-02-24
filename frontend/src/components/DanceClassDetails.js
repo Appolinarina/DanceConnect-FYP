@@ -5,10 +5,34 @@ import { useAuthContext } from "../hooks/useAuthContext"
 import format from 'date-fns/format'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
-const DanceClassDetails = ({danceclass}) => {
+const DanceClassDetails = ({danceclass, onBook}) => {
     const { dispatch } = useDanceClassesContext()
     const {user} = useAuthContext()
 
+    const isOwner =
+        user && danceclass.user_id === user._id
+
+    const handleDelete = async () => {
+        if (!user) return
+
+        const response = await fetch("/api/danceclasses/" + danceclass._id, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${user.token}`,
+            },
+        })
+
+        const json = await response.json()
+
+        if (response.ok) {
+            dispatch({ type: "DELETE_DANCECLASS", payload: json })
+        } else {
+            console.log(json.error)
+        }
+    }
+
+    // for logged-in user to only see their own created classes and to be able to delete them (old version of handleDelete)
+    // DELETE IF NO ERRORS
     const handleClick = async () => {
 
         if (!user) {
@@ -44,8 +68,17 @@ const DanceClassDetails = ({danceclass}) => {
             </p>
             <p><strong>Capacity: </strong>{danceclass.capacity}</p>
             <p><strong>Price: </strong>{danceclass.price}</p>
-            <p>{formatDistanceToNow(new Date(danceclass.createdAt), {addSuffix: true})} </p> 
-            <span onClick={handleClick}>Delete</span>
+            <p>{formatDistanceToNow(new Date(danceclass.createdAt), {addSuffix: true})} </p>
+
+            {/* Conditional Button Logic */}
+            {isOwner ? (
+                <span type="button" onClick={handleDelete}>
+                Delete
+                </span>
+            ) : (
+                <button type="button" 
+                onClick= {() => onBook && onBook(danceclass._id)}> Book Class </button>
+            )}
         </div>
     )
 }

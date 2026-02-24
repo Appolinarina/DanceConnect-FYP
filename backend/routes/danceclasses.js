@@ -1,18 +1,26 @@
 const express = require('express')
 const {
     getClasses,
+    getAllClasses,
     getClass,
     createClass,
     deleteClass,
     updateClass
 } = require('../controllers/danceclassController')
 const requireAuth = require('../middleware/requireAuth')
+const { bookClass } = require('../controllers/bookingController')
 
 const router = express.Router() // express router instance
 
 router.use(requireAuth) //user authentication needed for the below routes
 
 // GET all classes
+router.get('/all', getAllClasses)
+
+// CREATE a class booking
+router.post('/:id/book', bookClass)
+
+// GET all user classes
 router.get('/', getClasses)
 
 // GET a single class

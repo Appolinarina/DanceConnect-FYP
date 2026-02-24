@@ -15,7 +15,7 @@ const loginUser = async (req, res) => {
         //create json web token
         const token = createToken(user._id)
 
-        res.status(200).json({email, token}) //send back email that the user login with, and the token
+        res.status(200).json({email, token, _id: user._id}) //send back email that the user login with, and the token, and user id
     } catch (error) {
         res.status(400).json({error: error.message})
     }
@@ -31,7 +31,7 @@ const signupUser = async (req, res) => {
         //create json web token
         const token = createToken(user._id)
 
-        res.status(200).json({email, token}) //send back email that the user signed up with, and the token
+        res.status(200).json({email, token, _id: user._id}) //send back email that the user signed up with, and the token, and user id
     } catch (error) {
         res.status(400).json({error: error.message})
     }

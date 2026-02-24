@@ -24,10 +24,18 @@ const Navbar = () => {
                         </div>
                     )}
                     {user && ( // only show Logout button if user is logged in
-                        <div>
+                    <>
+                        <div className="nav-links">
+                            {/*nav links*/}
+                            <Link to="/">My Classes</Link>
+                            <Link to="/browse">Browse</Link>
+                        </div>
+                            {/*user info*/}
+                         <div className="nav-user">
                             <span>{user.email}</span>
                             <button onClick={handleLogout}>Logout</button>
                         </div>
+                    </>
                     )}
                 </nav>
             </div>

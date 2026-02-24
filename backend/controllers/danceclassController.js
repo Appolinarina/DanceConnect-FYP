@@ -1,7 +1,7 @@
 const danceClass = require('../models/danceclassModel')
 const mongoose = require('mongoose')
 
-//get all classes
+//get all classes (for single user to see their own classes)
 const getClasses = async (req, res) => {
     const user_id = req.user._id
 
@@ -9,6 +9,14 @@ const getClasses = async (req, res) => {
     const danceclasses = await danceClass.find({user_id}).sort({createdAt: -1}) //sort classes by newest first
 
     res.status(200).json(danceclasses)
+}
+
+// get all classes (for browsing/booking other users classes)
+const getAllClasses = async (req, res) => {
+  const danceclasses = await danceClass
+  .find({user_id: { $ne: req.user._id }}) //leave out your created classes while browsing
+  .sort({ createdAt: -1 }) //sort classes by newest first
+  res.status(200).json(danceclasses)
 }
 
 //get a single class
@@ -79,8 +87,10 @@ const deleteClass = async (req, res) => {
         return res.status(404).json({error: 'No such dance class'})
     }
 
-    const danceclass = await danceClass.findOneAndDelete({_id: id}) //find _id in mongoDB that is same as grabbed id from req
-
+    const danceclass = await danceClass.findOneAndDelete({
+        _id: id, //find _id in mongoDB that is same as grabbed id from req
+        user_id: req.user._id //only user that created class can delete it
+    }) 
     if (!danceclass) {
         return res.status(404).json({error: 'No such class'})
     }
@@ -95,9 +105,11 @@ const updateClass = async (req, res) => {
         return res.status(404).json({error: 'No such dance class'})
     }
 
-    const danceclass = await danceClass.findOneAndUpdate({_id: id}, {
-        ...req.body // spread properties off object, whatever properties are in req body, would output in this object
-    }) 
+    const danceclass = await danceClass.findOneAndUpdate(
+        {_id: id, user_id: req.user._id}, //only allow class creator to update class
+        {...req.body}, // spread properties off object, whatever properties are in req body, would output in this object
+        {new: true}
+    ) 
 
     if (!danceclass) {
         return res.status(404).json({error: 'No such class'})
@@ -108,6 +120,7 @@ const updateClass = async (req, res) => {
 
 module.exports = {
     getClasses,
+    getAllClasses,
     getClass,
     createClass,
     deleteClass,
