@@ -42,7 +42,7 @@ const bookClass = async (req, res) => {
   }
 }
 
-// for showing user 'upcoming classes'
+// for showing user booked classes
 const getMyBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({ userId: req.user._id })
@@ -55,4 +55,27 @@ const getMyBookings = async (req, res) => {
   }
 }
 
-module.exports = { bookClass, getMyBookings }
+// Return only upcoming bookings (future classes only)
+const getMyUpcomingBookings = async (req, res) => {
+  try {
+    const currentTime = new Date()
+
+    // 1) Find this user's bookings and populate the class
+    // 2) Only include classes where class date is in the future
+    const bookings = await Booking.find({ userId: req.user._id })
+      .populate({
+        path: 'classId',
+        match: { date: { $gt: currentTime } }
+      })
+      .sort({ createdAt: -1 })
+
+    // If a booking's class is in the past, populate will set classId to null
+    const upcomingBookings = bookings.filter((booking) => booking.classId !== null)
+
+    res.status(200).json(upcomingBookings)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
+module.exports = { bookClass, getMyBookings, getMyUpcomingBookings }

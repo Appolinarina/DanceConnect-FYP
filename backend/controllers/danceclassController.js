@@ -19,6 +19,21 @@ const getAllClasses = async (req, res) => {
   res.status(200).json(danceclasses)
 }
 
+// get upcoming classes for browsing/booking (future only)
+const getBrowseClasses = async (req, res) => {
+  try {
+    const now = new Date()
+
+    const futureClasses = await danceClass
+      .find({ date: { $gt: now } }) //class time later than now
+      .sort({ date: 1 }) //sort oldest to newest
+
+    res.status(200).json(futureClasses)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
 //get a single class
 const getClass = async (req, res) => {
     const {id} = req.params //grab id from request parameters
@@ -121,6 +136,7 @@ const updateClass = async (req, res) => {
 module.exports = {
     getClasses,
     getAllClasses,
+    getBrowseClasses,
     getClass,
     createClass,
     deleteClass,

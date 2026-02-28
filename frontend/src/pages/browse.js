@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useAuthContext } from "../hooks/useAuthContext"
 import DanceClassDetails from "../components/DanceClassDetails"
 
@@ -9,11 +9,17 @@ const Browse = () => {
   const [myUpcoming, setMyUpcoming] = useState([])
   const [error, setError] = useState(null)
 
-  // Fetch all classes (left side)
+  // Fetch all classes for browsing (left side)
   useEffect(() => {
     const fetchAllClasses = async () => {
-      const response = await fetch("/api/danceclasses/all", {
-        headers: { Authorization: `Bearer ${user.token}` },
+      if (!user) {
+        return
+      }
+
+      const response = await fetch("/api/danceclasses/browse", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       })
 
       const json = await response.json()
@@ -27,13 +33,20 @@ const Browse = () => {
       setError(null)
     }
 
-    if (user) fetchAllClasses()
+    fetchAllClasses()
   }, [user])
 
-  // 2) Fetch my bookings (right side)
-  const fetchMyUpcoming = async () => {
-    const response = await fetch("/api/danceclasses/bookings/me", {
-      headers: { Authorization: `Bearer ${user.token}` },
+  
+  // fetch upcoming bookings (right column) - backend already filters out past classes
+  const fetchMyUpcoming = useCallback(async () => {
+    if (!user) {
+      return
+    }
+
+    const response = await fetch("/api/danceclasses/bookings/me/upcoming", {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
     })
 
     const json = await response.json()
@@ -42,35 +55,30 @@ const Browse = () => {
       return
     }
 
-    // Extract class objects from bookings
-    const bookedClasses = json.map((booking) => {
-      return booking.classId
-    })
+    // json is a list of bookings with classId populated
+    const upcomingClasses = json
+      .map((booking) => booking.classId)
+      .filter((danceClass) => danceClass !== null)
 
-    // Keep only future classes
-    const futureClasses = bookedClasses.filter((danceClass) => {
-      if (!danceClass) return false
-      return new Date(danceClass.date) > new Date()
-    })
-
-    // Sort by soonest first
-    const sortedUpcomingClasses = futureClasses.sort((classA, classB) => {
-      return new Date(classA.date) - new Date(classB.date)
-    })
-
-    setMyUpcoming(sortedUpcomingClasses)
-  }
-
-  useEffect(() => {
-    if (user) fetchMyUpcoming()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setMyUpcoming(upcomingClasses)
   }, [user])
 
-  // 3) Book a class, then refresh "My Upcoming"
+  useEffect(() => {
+    fetchMyUpcoming()
+  }, [fetchMyUpcoming])
+
+
+  // book a class, then refresh upcoming list
   const handleBook = async (classId) => {
+    if (!user) {
+      return
+    }
+
     const response = await fetch("/api/danceclasses/" + classId + "/book", {
       method: "POST",
-      headers: { Authorization: `Bearer ${user.token}` },
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
     })
 
     const json = await response.json()
@@ -81,6 +89,8 @@ const Browse = () => {
     }
 
     setError(null)
+
+    // refresh right column so newly booked class appears
     await fetchMyUpcoming()
   }
 
@@ -104,9 +114,7 @@ const Browse = () => {
       <div>
         <h3>My Upcoming Classes</h3>
 
-        {myUpcoming.length === 0 && (
-          <p>No upcoming bookings yet.</p>
-        )}
+        {myUpcoming.length === 0 && <p>No upcoming bookings yet.</p>}
 
         {myUpcoming.map((danceclass) => (
           <DanceClassDetails
