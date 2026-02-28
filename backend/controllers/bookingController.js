@@ -42,4 +42,17 @@ const bookClass = async (req, res) => {
   }
 }
 
-module.exports = { bookClass }
+// for showing user 'upcoming classes'
+const getMyBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({ userId: req.user._id })
+      .populate('classId')
+      .sort({ createdAt: -1 })
+
+    res.status(200).json(bookings)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
+module.exports = { bookClass, getMyBookings }

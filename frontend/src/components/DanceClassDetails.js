@@ -5,7 +5,7 @@ import { useAuthContext } from "../hooks/useAuthContext"
 import format from 'date-fns/format'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
-const DanceClassDetails = ({danceclass, onBook}) => {
+const DanceClassDetails = ({danceclass, onBook, showBook = true}) => {
     const { dispatch } = useDanceClassesContext()
     const {user} = useAuthContext()
 
@@ -70,14 +70,23 @@ const DanceClassDetails = ({danceclass, onBook}) => {
             <p><strong>Price: </strong>{danceclass.price}</p>
             <p>{formatDistanceToNow(new Date(danceclass.createdAt), {addSuffix: true})} </p>
 
+
             {/* Conditional Button Logic */}
-            {isOwner ? (
-                <span type="button" onClick={handleDelete}>
+            
+            {/* if the user owns the class - show delete button */}
+            {isOwner && (
+            <span onClick={handleDelete}>
                 Delete
-                </span>
-            ) : (
-                <button type="button" 
-                onClick= {() => onBook && onBook(danceclass._id)}> Book Class </button>
+            </span>
+            )}
+
+            {/* if not owner, and we want to allow booking - show book button */}
+            {!isOwner && showBook && (
+            <button
+                type="button"
+                onClick={() => onBook && onBook(danceclass._id)}>
+                    Book Class
+            </button>
             )}
         </div>
     )
