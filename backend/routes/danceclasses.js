@@ -13,10 +13,16 @@ const { bookClass, getMyBookings, getMyUpcomingBookings } = require('../controll
 
 const router = express.Router() // express router instance
 
-router.use(requireAuth) //user authentication needed for the below routes
-
+// PUBLIC ROUTES - NO AUTH NEEDED
 // GET all classes (for browsing - don't show classes in the past)
 router.get('/browse', getBrowseClasses)
+
+// GET a single class
+router.get('/:id', getClass)
+
+
+// AUTHENTICATED ROUTES
+router.use(requireAuth) // user authentication needed for the below routes
 
 // GET all classes
 router.get('/all', getAllClasses)
@@ -32,9 +38,6 @@ router.post('/:id/book', bookClass)
 
 // GET all user classes
 router.get('/', getClasses)
-
-// GET a single class
-router.get('/:id', getClass)
 
 // POST a new class
 router.post('/', createClass)

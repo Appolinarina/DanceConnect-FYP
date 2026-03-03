@@ -1,27 +1,24 @@
 import { useEffect, useState, useCallback } from "react"
 import { useAuthContext } from "../hooks/useAuthContext"
+import { useLogout } from "../hooks/useLogout"
+import { useNavigate } from "react-router-dom"
 import DanceClassDetails from "../components/DanceClassDetails"
+import { authFetch } from "../utils/authFetch"
 
 const Browse = () => {
   const { user } = useAuthContext()
+  const { logout } = useLogout()
+  const navigate = useNavigate()
 
   const [classes, setClasses] = useState([])
   const [myUpcoming, setMyUpcoming] = useState([])
   const [error, setError] = useState(null)
 
-  // Fetch all classes for browsing (left side)
+  // fetch all classes - left side
   useEffect(() => {
     const fetchAllClasses = async () => {
-      if (!user) {
-        return
-      }
-
-      const response = await fetch("/api/danceclasses/browse", {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      })
-
+      // public endpoint - allow browsing even when not logged in
+      const response = await fetch("/api/danceclasses/browse")
       const json = await response.json()
 
       if (!response.ok) {
@@ -34,20 +31,20 @@ const Browse = () => {
     }
 
     fetchAllClasses()
-  }, [user])
+  }, [])
 
-  
-  // fetch upcoming bookings (right column) - backend already filters out past classes
+  // fetch my bookings - right side
   const fetchMyUpcoming = useCallback(async () => {
     if (!user) {
       return
     }
 
-    const response = await fetch("/api/danceclasses/bookings/me/upcoming", {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    })
+    const response = await authFetch("/api/danceclasses/bookings/me/upcoming", {}, user, logout) // auth header is passed in authFetch.js
+
+    // If token expired, authFetch logs the user out and returns null
+    if (!response) {
+      return
+    }
 
     const json = await response.json()
 
@@ -61,25 +58,31 @@ const Browse = () => {
       .filter((danceClass) => danceClass !== null)
 
     setMyUpcoming(upcomingClasses)
-  }, [user])
+  }, [user, logout])
 
   useEffect(() => {
     fetchMyUpcoming()
   }, [fetchMyUpcoming])
 
-
-  // book a class, then refresh upcoming list
+  // book a class, then refresh "My Upcoming"
   const handleBook = async (classId) => {
+    // if not logged in, redirect to login
     if (!user) {
+      navigate("/login")
       return
     }
 
-    const response = await fetch("/api/danceclasses/" + classId + "/book", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    })
+    const response = await authFetch(
+      "/api/danceclasses/" + classId + "/book",
+      { method: "POST" },
+      user,
+      logout
+    )
+
+    // If token expired, authFetch logs the user out and returns null
+    if (!response) {
+      return
+    }
 
     const json = await response.json()
 
@@ -89,8 +92,8 @@ const Browse = () => {
     }
 
     setError(null)
-
-    // refresh right column so newly booked class appears
+    
+    // refresh right column so newly booked class appears    
     await fetchMyUpcoming()
   }
 
@@ -114,15 +117,18 @@ const Browse = () => {
       <div>
         <h3>My Upcoming Classes</h3>
 
-        {myUpcoming.length === 0 && <p>No upcoming bookings yet.</p>}
+        {!user && <p>Please log in to view your upcoming classes.</p>}
 
-        {myUpcoming.map((danceclass) => (
-          <DanceClassDetails
-            key={danceclass._id}
-            danceclass={danceclass}
-            showBook={false}
-          />
-        ))}
+        {user && myUpcoming.length === 0 && <p>No upcoming bookings yet.</p>}
+
+        {user &&
+          myUpcoming.map((danceclass) => (
+            <DanceClassDetails
+              key={danceclass._id}
+              danceclass={danceclass}
+              showBook={false}
+            />
+          ))}
       </div>
     </div>
   )

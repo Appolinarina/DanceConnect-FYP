@@ -31,7 +31,7 @@ function App() {
           />
           <Route
             path="/browse"
-            element={user ? <Browse /> : <Navigate to="/login" />}
+            element={<Browse />}
           />
         </Routes>
       </div>
