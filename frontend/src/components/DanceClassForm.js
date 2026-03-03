@@ -81,12 +81,17 @@ const DanceClassForm = () => {
             />
 
             <label>Class Level:</label>
-            <input
-                type="text"
-                onChange={(e) => setDanceLevel(e.target.value)} 
+            <select
+                onChange={(e) => setDanceLevel(e.target.value)}
                 value={dance_level}
                 className={emptyFields.includes('dance_level') ? 'error' : ''}
-            />
+            > 
+                <option value="">Select level</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="open">Open level</option>
+            </select>
 
             <label>Location:</label>
             <input
