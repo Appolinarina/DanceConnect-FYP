@@ -40,7 +40,12 @@ const Home = () => {
     return (
         <div className="home">
             <div className="danceclasses">
-                {danceclasses && danceclasses.map((danceclass) => ( //only map danceclasses if there are danceclass values (i.e. doesnt map anything if danceclasses is null)
+                
+                {danceclasses && danceclasses.length === 0 && (
+                <p>Fill out the form on the right side if you wish to create a class!</p>
+                )}
+
+                {danceclasses && danceclasses.length > 0 && danceclasses.map((danceclass) => ( //only map danceclasses if there are danceclass values (i.e. doesnt map anything if danceclasses is null)
                     <DanceClassDetails key={danceclass._id} danceclass={danceclass}/> //find class id, and output each classes' title
                 ))}
             </div>

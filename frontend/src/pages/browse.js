@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState } from "react"
 import { useAuthContext } from "../hooks/useAuthContext"
 import { useLogout } from "../hooks/useLogout"
 import { useNavigate } from "react-router-dom"
@@ -34,14 +34,18 @@ const Browse = () => {
   }, [])
 
   // fetch my bookings - right side
-  const fetchMyUpcoming = useCallback(async () => {
+
+  // outside useEffect so we can call it from:
+  // 1. useEffect (when user logs in / changes)
+  // 2. handleBook (after user books a class)
+  const fetchMyUpcoming = async () => {
     if (!user) {
       return
     }
 
     const response = await authFetch("/api/danceclasses/bookings/me/upcoming", {}, user, logout) // auth header is passed in authFetch.js
 
-    // If token expired, authFetch logs the user out and returns null
+    // if token expired, authFetch logs the user out and returns null
     if (!response) {
       return
     }
@@ -58,11 +62,12 @@ const Browse = () => {
       .filter((danceClass) => danceClass !== null)
 
     setMyUpcoming(upcomingClasses)
-  }, [user, logout])
+  }
 
+  // run fetchMyUpcoming when the user logs in or changes
   useEffect(() => {
     fetchMyUpcoming()
-  }, [fetchMyUpcoming])
+  }, [user?.token]) // if user exists, pass token. if no user, just return undefined
 
   // book a class, then refresh "My Upcoming"
   const handleBook = async (classId) => {
@@ -92,8 +97,8 @@ const Browse = () => {
     }
 
     setError(null)
-    
-    // refresh right column so newly booked class appears    
+
+    // refresh right column so newly booked class appears
     await fetchMyUpcoming()
   }
 
@@ -104,13 +109,15 @@ const Browse = () => {
         <h2>Browse Classes</h2>
         {error && <div className="error">{error}</div>}
 
-        {classes.map((danceclass) => (
-          <DanceClassDetails
-            key={danceclass._id}
-            danceclass={danceclass}
-            onBook={handleBook}
-          />
-        ))}
+        {classes.length === 0 && <p>No classes available to book just yet!</p>}
+
+        {classes.length > 0 && classes.map((danceclass) => (
+            <DanceClassDetails
+              key={danceclass._id}
+              danceclass={danceclass}
+              onBook={handleBook}
+            />
+          ))}
       </div>
 
       {/* RIGHT COLUMN */}
