@@ -87,7 +87,8 @@ const createClass = async (req, res) => {
     //add doc to db
         try {
             const user_id = req.user._id
-            const danceclass = await danceClass.create({title, dance_style, dance_level, location, date, capacity, price, user_id})
+            const spotsRemaining = capacity
+            const danceclass = await danceClass.create({title, dance_style, dance_level, location, date, capacity, price, user_id, spotsRemaining})
             res.status(200).json(danceclass)
         } catch (error){
             res.status(400).json({error: error.message})

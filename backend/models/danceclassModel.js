@@ -34,6 +34,10 @@ const danceClassSchema = new Schema({
     user_id: {
         type: String,
         required: true
+    },
+    spotsRemaining: {
+        type: Number,
+        required: true
     }
 }, {timestamps: true}) //to automatically add timestamps property
 

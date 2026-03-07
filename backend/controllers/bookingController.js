@@ -19,25 +19,42 @@ const bookClass = async (req, res) => {
     return res.status(400).json({ error: 'You cannot book your own class' })
   }
 
-  // stop booking in the past (optional but sensible)
+  // stop booking in the past 
   if (new Date(danceclass.date) < new Date()) {
     return res.status(400).json({ error: 'You cannot book a class in the past' })
   }
 
-  // capacity check
-  const bookedCount = await Booking.countDocuments({ classId })
-  if (bookedCount >= danceclass.capacity) {
-    return res.status(400).json({ error: 'Class is fully booked' })
+  // CAPACITY DECREMENTATION IMPLEMENTATION
+  // 1. try to reserve a spot (decrease spotsRemaining by 1)
+  // only succeeds if spotsRemaining is greater than 0
+  const updatedClass = await DanceClass.findOneAndUpdate(
+    { _id: classId, spotsRemaining: { $gt: 0 } },
+    { $inc: { spotsRemaining: -1 } },
+    { new: true }
+  )
+
+  // if updatedClass is null means the class was already full
+  if (!updatedClass) {
+    return res.status(400).json({ error: "Class is fully booked" })
   }
 
+  // 2. create booking
   try {
     const booking = await Booking.create({ classId, userId: req.user._id })
-    return res.status(200).json(booking)
+    return res.status(200).json({
+      booking,
+      spotsRemaining: updatedClass.spotsRemaining
+    })
   } catch (error) {
-    // duplicate booking
+
+    // if user already booked undo spot reservation
     if (error.code === 11000) {
-      return res.status(400).json({ error: 'You have already booked this class' })
+      await DanceClass.findByIdAndUpdate(classId, { $inc: { spotsRemaining: 1 } })
+      return res.status(400).json({ error: "You have already booked this class" })
     }
+
+    // any other error - undo reservation and return error
+    await DanceClass.findByIdAndUpdate(classId, { $inc: { spotsRemaining: 1 } })
     return res.status(400).json({ error: error.message })
   }
 }

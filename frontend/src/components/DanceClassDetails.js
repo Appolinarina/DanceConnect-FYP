@@ -9,11 +9,16 @@ const DanceClassDetails = ({danceclass, onBook, showBook = true}) => {
     const { dispatch } = useDanceClassesContext()
     const {user} = useAuthContext()
 
-    const isOwner =
-        user && danceclass.user_id === user._id
+    // if logged in user is class owner
+    const isOwner = user && danceclass.user_id === user._id
+
+    // spaces left stored on the class document (decreases when users book)
+    const spotsRemaining = danceclass.spotsRemaining
 
     const handleDelete = async () => {
-        if (!user) return
+        if (!user) {
+            return
+        }
 
         const response = await fetch("/api/danceclasses/" + danceclass._id, {
             method: "DELETE",
@@ -31,43 +36,18 @@ const DanceClassDetails = ({danceclass, onBook, showBook = true}) => {
         }
     }
 
-    // for logged-in user to only see their own created classes and to be able to delete them (old version of handleDelete)
-    // DELETE IF NO ERRORS
-    const handleClick = async () => {
-
-        if (!user) {
-            return
-        }
-
-        const response = await fetch('/api/danceclasses/' + danceclass._id, { //append class id to end of endpoint
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${user.token}`
-            }
-        }) 
-        const json = await response.json() //deleted document in json
-
-        if (response.ok) {
-            dispatch({type: 'DELETE_DANCECLASS', payload: json})
-        }
-    }
-
     return (
         <div className="danceclass-details">
             <h4>{danceclass.title}</h4>
             <p><strong>Style: </strong>{danceclass.dance_style}</p>
             <p><strong>Level: </strong>{danceclass.dance_level}</p>
             <p><strong>Location: </strong>{danceclass.location}</p>
-            <p>
-                <strong>Date:</strong> 
-                {format(new Date(danceclass.date), " dd MMM yyyy")}
-            </p>
-            <p>
-                <strong>Time:</strong> 
-                {format(new Date(danceclass.date), " HH:mm")}
-            </p>
+            <p><strong>Date: </strong> {format(new Date(danceclass.date), " dd MMM yyyy")}</p>
+            <p><strong>Time: </strong> {format(new Date(danceclass.date), " HH:mm")}</p>
             <p><strong>Capacity: </strong>{danceclass.capacity}</p>
+            <p><strong>Spaces left: </strong>{spotsRemaining}</p>
             <p><strong>Price: </strong>{danceclass.price}</p>
+
             <p>{formatDistanceToNow(new Date(danceclass.createdAt), {addSuffix: true})} </p>
 
 
@@ -84,8 +64,9 @@ const DanceClassDetails = ({danceclass, onBook, showBook = true}) => {
             {!isOwner && showBook && (
             <button
                 type="button"
+                disabled={spotsRemaining <= 0}
                 onClick={() => onBook && onBook(danceclass._id)}>
-                    Book Class
+                     {spotsRemaining <= 0 ? "Full" : "Book Class"}
             </button>
             )}
         </div>
