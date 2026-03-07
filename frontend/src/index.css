@@ -117,7 +117,7 @@ div.error {
   margin: 20px 0; /* top and bottom 20px, left and right 0 */
 }
 
-input.error{ /* any input error will have red box around it*/
+input.error, select.error { /* any input error will have red box around it*/
   border: 1px solid var(--error);
 }
 
@@ -150,4 +150,18 @@ form.signup, form.login {
   padding: 20px;
   background: #fff;
   border-radius: 4px;
+}
+
+/* notif popups */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+  z-index: 9999;
 }

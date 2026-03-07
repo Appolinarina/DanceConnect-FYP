@@ -1,10 +1,12 @@
 import { useState } from "react"
 import { useDanceClassesContext } from "../hooks/useDanceClassContext"
 import { useAuthContext } from "../hooks/useAuthContext"
+import { useToast } from "../hooks/useToast"
 
 const DanceClassForm = () => {
     const {dispatch} = useDanceClassesContext()
     const {user} = useAuthContext()
+    const { showToast } = useToast()
 
     //create None state for all properties for the form for user to type into
     const [title, setTitle] = useState('') 
@@ -57,6 +59,7 @@ const DanceClassForm = () => {
             setEmptyFields([])
             console.log('New Dance Class Created', json)
             dispatch({type: 'CREATE_DANCECLASS', payload: json}) //dispatch only if response is ok, to update context state, so to re-render the home component
+            showToast("Your class has been successfully created") //show popup
         }
     }
 

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom' //navigate to redirect user
 import { useAuthContext } from './hooks/useAuthContext'
+import Toast from "./components/Toast"
 
 //pages & components
 import Home from './pages/home' 
@@ -35,6 +36,7 @@ function App() {
           />
         </Routes>
       </div>
+      <Toast />
       </BrowserRouter>
     </div>
   );
