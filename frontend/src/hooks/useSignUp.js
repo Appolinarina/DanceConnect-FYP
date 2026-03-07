@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {useAuthContext} from './useAuthContext' //for user property and dispatch function
+import { useToast } from "./useToast"
 
 // signup, get response back
 // if successful (user logged in) - update auth context to say we have current user (update line 17 in AuthContext.js)
@@ -8,6 +9,7 @@ export const useSignup = () => {
     const [error, setError] = useState(null)
     const [isLoading, setIsLoading] = useState(null) //track loading state (if async req is in progress or not) - disable form button while req incomplete
     const {dispatch} = useAuthContext()
+    const {showToast} = useToast()
 
     const signup = async(email, password) => {
         //starting request
@@ -31,6 +33,9 @@ export const useSignup = () => {
 
             //update auth context
             dispatch({type: 'LOGIN', payload: json})
+
+            // show popup
+            showToast("You have successfully signed up and logged in")
 
             setIsLoading(false)
         }
