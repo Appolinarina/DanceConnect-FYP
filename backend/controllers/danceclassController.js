@@ -24,9 +24,68 @@ const getBrowseClasses = async (req, res) => {
   try {
     const now = new Date()
 
+    // return only classes in the future (i.e. don't show classes in the past)
+    const query = {
+      date: { $gt: now }
+    }
+
+    // Filter by level: beginner / intermediate / advanced / open
+    const level = req.query.level
+    if (level) {
+      query.dance_level = level
+    }
+
+    // FILTER PRICE RANGE
+    // filter "free only"
+    const freeOnly = req.query.freeOnly === "true"
+    if (freeOnly) {
+      query.price = 0
+    } 
+    else {
+      // otherwise allow min/max price range filtering
+      const minPrice = req.query.minPrice
+      const maxPrice = req.query.maxPrice
+
+      const priceFilter = {}
+
+      if (minPrice !== undefined && minPrice !== "") {
+        priceFilter.$gte = Number(minPrice)
+      }
+
+      if (maxPrice !== undefined && maxPrice !== "") {
+        priceFilter.$lte = Number(maxPrice)
+      }
+
+      // only attach price filter if user provided min or max
+      if (priceFilter.$gte !== undefined || priceFilter.$lte !== undefined) {
+        query.price = priceFilter
+      }
+    }
+
+    // SORTING IN FILTERED SEARCH
+    const sortOption = req.query.sort
+
+    let sort = { date: 1 } // default: soonest first
+
+    if (sortOption === "price_asc") { //lowest first
+      sort = { price: 1 }
+    }
+
+    if (sortOption === "price_desc") { //highest first
+      sort = { price: -1 }
+    }
+
+    if (sortOption === "date_asc") { //soonest first
+      sort = { date: 1 }
+    }
+
+    if (sortOption === "date_desc") { 
+      sort = { date: -1 }
+    }
+
     const futureClasses = await danceClass
-      .find({ date: { $gt: now } }) //class time later than now
-      .sort({ date: 1 }) //sort oldest to newest
+      .find(query) // find classes (+ if based on refined search options)
+      .sort(sort) // sort based on sort option (price/date)
 
     res.status(200).json(futureClasses)
   } catch (error) {

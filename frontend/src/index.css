@@ -165,3 +165,94 @@ form.signup, form.login {
   box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
   z-index: 9999;
 }
+
+/* SEARCH FEATURE CSS */
+/* Filter panel layout */
+.filter-panel {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: #fff;
+  border-radius: 4px;
+  padding: 12px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Each row of controls */
+.filter-row {
+  margin-bottom: 12px;
+}
+
+/* Two items on the same row */
+.filter-row.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Field wrapper */
+.filter-field label {
+  display: block;
+  font-size: 0.9em;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+/* 3 items on one row (Free + Min + Max) */
+.filter-row.three-col {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  gap: 12px;
+  align-items: end;
+}
+
+/* When min/max are disabled, make it obvious */
+.filter-panel input:disabled {
+  background: #f1f1f1;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Make selects/inputs inside filter match your normal input styles */
+.filter-panel select,
+.filter-panel input[type="number"] {
+  width: 100%;
+}
+
+/* Checkbox row */
+.filter-checkbox {
+  display: inline-flex;
+  align-items: center;   /* vertical centring */
+  gap: 8px;              /* space between text and checkbox */
+  height: 100%;          /* helps in grid rows */
+  margin-top: 22px;      /* lines it up with the inputs (because inputs have labels above) */
+  font-size: 0.95em;
+  color: #555;
+}
+
+/* makes the checkbox a bit easier to click and visually consistent */
+.filter-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+/* browse filter buttons */
+/* smaller white buttons for browse (toggle + apply) */
+.danceclasses > button,
+.filter-panel button {
+  background: #fff;
+  color: var(--secondary);
+  border: 2px solid var(--secondary);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-family: "Poppins";
+  cursor: pointer;
+  font-size: 0.9em;
+  width: fit-content;
+}
+
+/* small hover effect */
+.danceclasses > button:hover,
+.filter-panel button:hover {
+  background: #f7f7f7;
+}
