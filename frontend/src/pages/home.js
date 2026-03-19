@@ -37,20 +37,26 @@ const Home = () => {
             fetchDanceClasses()
         }
     }, [dispatch, user]) // rerurn useEffect if dispatch functions changes, (+ added user as dependency)
-    return (
-        <div className="home">
-            <div className="danceclasses">
-                
-                {danceclasses && danceclasses.length === 0 && (
-                <p>Fill out the form on the right side if you wish to create a class!</p>
-                )}
+   return (
+    <div className="home">
+        <div className="page-panel">
+            <h2 className="section-title">My Classes</h2>
+            <p className="section-subtitle">
+                Manage the classes you have created and keep track of your upcoming sessions.
+            </p>
 
-                {danceclasses && danceclasses.length > 0 && danceclasses.map((danceclass) => ( //only map danceclasses if there are danceclass values (i.e. doesnt map anything if danceclasses is null)
-                    <DanceClassDetails key={danceclass._id} danceclass={danceclass}/> //find class id, and output each classes' title
-                ))}
-            </div>
-            <DanceClassForm />
+            {danceclasses && danceclasses.length === 0 && (
+                <div className="empty-state">
+                You have not created any classes yet. Use the form on the right to add your first class.
+                </div>
+            )}
+
+            {danceclasses && danceclasses.length > 0 && danceclasses.map((danceclass) => (
+                <DanceClassDetails key={danceclass._id} danceclass={danceclass} />
+            ))}
         </div>
+        <DanceClassForm />
+    </div>
     )
 }
 

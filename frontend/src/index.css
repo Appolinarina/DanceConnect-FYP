@@ -1,258 +1,506 @@
-/* google font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-/* layout */
 :root {
-  --primary: #413620;
-  --secondary: #9C6615;
-  --error: #e7195a;
+  --bg: #f6f1e8;
+  --bg-soft: #efe7da;
+  --surface: #fffaf2;
+  --surface-2: #f8f0e2;
+  --primary: #4f3d24;
+  --secondary: #b9832f;
+  --accent: #7e9470;
+  --accent-soft: #e3ebdc;
+  --text: #2f2a24;
+  --text-soft: #6a6257;
+  --border: #e5d9c7;
+  --error: #c84b5a;
+  --shadow-sm: 0 6px 18px rgba(79, 61, 36, 0.06);
+  --shadow-md: 0 14px 32px rgba(79, 61, 36, 0.10);
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 26px;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: #f1f1f1;
   margin: 0;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif;
+  background:
+    radial-gradient(circle at top left, #fbf6ee 0%, #f6f1e8 45%, #efe7da 100%);
+  color: var(--text);
 }
 
-/*inside navbar*/
+h1, h2, h3, h4 {
+  color: var(--primary);
+  margin-top: 0;
+}
+
+p {
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+/* navbar */
 header {
-  background: #fff;
+  background: rgba(255, 250, 242, 0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 header .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 10px 20px;
+  padding: 18px 24px;
   display: flex;
-  align-items: center; /*vertical justifying of content*/
-  justify-content: space-between; /* left and right justifying*/
+  align-items: center;
+  justify-content: space-between;
 }
 
-header a {  /* anchor tags */
-  color: #333;
+header a {
+  color: var(--primary);
   text-decoration: none;
 }
 
-
-.pages{
-  max-width: 1400px;
-  padding: 20px;
-  margin: 0 auto;
-}
-
-/* homepage */
-.home {
-  display: grid;
-  grid-template-columns: 3fr 1fr; /*3 fractions on left, 1 on right (so workout details on left, save space on right for add new dance class form) */
-  gap: 100px;
-}
-
-.danceclass-details { /*boxes for each danceclass*/
-  background: #fff;
-  border-radius: 4px;
-  margin: 20px auto;
-  padding: 20px;
-  position: relative;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
-}
-
-.danceclass-details h4 {
-  margin: 0 0 10px 0;
-  font-size: 1.2em;
-  color: var(--secondary);
-}
-
-.danceclass-details p {
+header h1 {
   margin: 0;
-  font-size: 0.9em;
-  color: #555;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
-.danceclass-details span { /*delete button */
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  cursor: pointer;
-  background: #f1f1f1;
-  padding: 6px;
-  border-radius: 50%;
-  color: #333;
-}
-
-/* new workout form */
-label, input, select {
-  display: block;
-}
-.create h3 {
-  font-size: 1.2em;
-  color: var(--secondary);
-}
-
-input, select {
-  padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-form button, .danceclass-details button {  /* submit button */
-  background: var(--secondary);
-  border: 0;
-  color: #fff;
-  padding: 10px;
-  font-family: "Poppins";
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-div.error {
-  padding: 10px;
-  background: #ffefef;
-  border: 1px solid var(--error);
-  color: var(--error);
-  border-radius: 4px;
-  margin: 20px 0; /* top and bottom 20px, left and right 0 */
-}
-
-input.error, select.error { /* any input error will have red box around it*/
-  border: 1px solid var(--error);
-}
-
-/* navbar */
 nav {
   display: flex;
   align-items: center;
+  gap: 16px;
 }
+
 nav a {
-  margin: 0 10px 0 10px;
+  margin: 0;
+  font-weight: 500;
+  color: var(--primary);
 }
 
-/* logout button */
-nav button {
-  background: #fff;
+nav a:hover {
   color: var(--secondary);
-  border: 2px solid var(--secondary);
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-family: "Poppins";
-  cursor: pointer;
-  font-size: 1em;
-  margin-left: 10px;
 }
 
-/* auth forms */
-form.signup, form.login {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 4px;
+.nav-links,
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-/* notif popups */
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: #fff;
-  padding: 12px 16px;
-  border-radius: 6px;
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-  z-index: 9999;
+.nav-user span {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--primary);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
 }
 
-/* SEARCH FEATURE CSS */
-/* Filter panel layout */
-.filter-panel {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  background: #fff;
-  border-radius: 4px;
-  padding: 12px;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+/* pages */
+.pages {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 34px 24px 56px;
 }
 
-/* Each row of controls */
-.filter-row {
+/* layout */
+.home {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.home > div {
+  min-width: 0;
+}
+
+/* hero panel */
+.hero-panel {
+  background: linear-gradient(135deg, #fff8ed 0%, #f5ebdc 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 28px;
+  margin-bottom: 18px;
+}
+
+.hero-kicker {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hero-panel h1 {
+  font-size: 2.2rem;
+  line-height: 1.1;
   margin-bottom: 12px;
 }
 
-/* Two items on the same row */
+.hero-text {
+  max-width: 700px;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* section wrappers */
+.page-panel,
+.sidebar-panel,
+.create,
+form.login,
+form.signup {
+  background: rgba(255, 250, 242, 0.82);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.page-panel,
+.sidebar-panel {
+  padding: 22px;
+}
+
+.sidebar-panel {
+  position: sticky;
+  top: 105px;
+}
+
+.section-title {
+  margin-bottom: 6px;
+  font-size: 1.75rem;
+}
+
+.section-subtitle {
+  margin-top: 0;
+  margin-bottom: 18px;
+  color: var(--text-soft);
+  font-size: 0.96rem;
+}
+
+/* cards */
+.danceclass-details {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin: 16px 0;
+  padding: 22px;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.danceclass-details:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.danceclass-details h4 {
+  margin: 0 0 14px 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.danceclass-details p {
+  margin: 0 0 7px 0;
+  font-size: 0.95rem;
+  color: var(--text-soft);
+}
+
+.danceclass-details strong {
+  color: var(--primary);
+}
+
+/* delete button */
+.danceclass-details span {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  cursor: pointer;
+  background: #f3e8da;
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: var(--primary);
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.danceclass-details span:hover {
+  background: #ead9c4;
+}
+
+/* forms */
+form.create,
+form.login,
+form.signup {
+  padding: 28px;
+}
+
+form.login,
+form.signup {
+  max-width: 500px;
+  margin: 60px auto;
+}
+
+.create h3,
+.login h3,
+.signup h3 {
+  font-size: 1.55rem;
+  margin-bottom: 22px;
+  color: var(--primary);
+}
+
+/* labels and inputs */
+label,
+input,
+select {
+  display: block;
+}
+
+label {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--primary);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 13px 14px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fffdf9;
+  color: var(--text);
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95rem;
+  transition: 0.2s ease;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(126, 148, 112, 0.14);
+  background: #ffffff;
+}
+
+input.error,
+select.error {
+  border: 1px solid var(--error);
+  background: #fff6f7;
+}
+
+/* buttons */
+form button,
+.danceclass-details button {
+  background: var(--secondary);
+  border: none;
+  color: #fffdf8;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(185, 131, 47, 0.22);
+  transition: 0.2s ease;
+}
+
+form button:hover,
+.danceclass-details button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.danceclass-details button:disabled {
+  background: #c9b598;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* secondary buttons */
+nav button,
+.filter-toggle,
+.filter-panel button {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+nav button:hover,
+.filter-toggle:hover,
+.filter-panel button:hover {
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.filter-toggle {
+  margin-bottom: 16px;
+}
+
+/* error boxes */
+div.error {
+  padding: 12px 14px;
+  background: #fff1f3;
+  border: 1px solid #edb5bf;
+  color: var(--error);
+  border-radius: 14px;
+  margin: 16px 0;
+}
+
+/* toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: #fffdf8;
+  padding: 14px 18px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+  z-index: 9999;
+}
+
+/* filter panel */
+.filter-panel {
+  margin: 16px 0 22px;
+  background: rgba(255, 250, 242, 0.9);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-row {
+  margin-bottom: 14px;
+}
+
 .filter-row.two-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
 }
 
-/* Field wrapper */
 .filter-field label {
   display: block;
-  font-size: 0.9em;
+  font-size: 0.92rem;
   margin-bottom: 6px;
-  color: #555;
+  color: var(--primary);
 }
 
-/* 3 items on one row (Free + Min + Max) */
 .filter-row.three-col {
   display: grid;
   grid-template-columns: auto 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
   align-items: end;
 }
 
-/* When min/max are disabled, make it obvious */
 .filter-panel input:disabled {
-  background: #f1f1f1;
+  background: #f3ede4;
   cursor: not-allowed;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
-/* Make selects/inputs inside filter match your normal input styles */
 .filter-panel select,
 .filter-panel input[type="number"] {
   width: 100%;
 }
 
-/* Checkbox row */
 .filter-checkbox {
   display: inline-flex;
-  align-items: center;   /* vertical centring */
-  gap: 8px;              /* space between text and checkbox */
-  height: 100%;          /* helps in grid rows */
-  margin-top: 22px;      /* lines it up with the inputs (because inputs have labels above) */
-  font-size: 0.95em;
-  color: #555;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  margin-top: 22px;
+  font-size: 0.95rem;
+  color: var(--primary);
+  font-weight: 500;
 }
 
-/* makes the checkbox a bit easier to click and visually consistent */
 .filter-checkbox input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   margin: 0;
+  accent-color: var(--accent);
 }
 
-/* browse filter buttons */
-/* smaller white buttons for browse (toggle + apply) */
-.danceclasses > button,
-.filter-panel button {
-  background: #fff;
-  color: var(--secondary);
-  border: 2px solid var(--secondary);
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-family: "Poppins";
-  cursor: pointer;
-  font-size: 0.9em;
-  width: fit-content;
+/* auth page centring */
+.auth-page {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 40px;
 }
 
-/* small hover effect */
-.danceclasses > button:hover,
-.filter-panel button:hover {
-  background: #f7f7f7;
+/* small utility text */
+.empty-state {
+  background: rgba(255, 250, 242, 0.8);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  color: var(--text-soft);
+}
+
+/* responsive */
+@media (max-width: 980px) {
+  .home {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-panel {
+    position: static;
+  }
+
+  .filter-row.two-col,
+  .filter-row.three-col {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-checkbox {
+    margin-top: 0;
+  }
+
+  header .container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  nav {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .nav-links,
+  .nav-user {
+    flex-wrap: wrap;
+  }
+
+  .hero-panel h1 {
+    font-size: 1.8rem;
+  }
 }

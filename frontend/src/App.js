@@ -20,8 +20,12 @@ function App() {
           <Route
             path="/" //home page
             //element to render for route
-            element={user ? <Home /> : <Navigate to="/login"/>} //if user authenticated, send to home. if not, redirect to login
+            element={<Browse />}
           />
+          <Route
+              path="/my-classes"
+              element={user ? <Home /> : <Navigate to="/login" />}
+            />
           <Route
             path="/login" //login page
             element={!user ? <Login /> : <Navigate to="/"/>} 
@@ -32,7 +36,7 @@ function App() {
           />
           <Route
             path="/browse"
-            element={<Browse />}
+            element={<Navigate to="/" />}
           />
         </Routes>
       </div>

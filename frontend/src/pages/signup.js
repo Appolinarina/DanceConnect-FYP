@@ -11,19 +11,21 @@ const Signup = () => {
         await signup(email, password) // pass in inputed email and pass from form (that are being stored in state)
     }
 
-    return(
-        <form className='signup' onSubmit={handleSubmit}>
+    return (
+        <div className="auth-page">
+            <form className='signup' onSubmit={handleSubmit}>
             <h3>Sign Up</h3>
 
-            <label>Email:</label> 
-            <input type="email" onChange={(e)=>setEmail(e.target.value)} value = {email}/> 
+            <label>Email:</label>
+            <input type="email" onChange={(e)=>setEmail(e.target.value)} value={email} />
 
-            <label>Password:</label> 
-            <input type="password" onChange={(e)=>setPassword(e.target.value)} value = {password}/> 
+            <label>Password:</label>
+            <input type="password" onChange={(e)=>setPassword(e.target.value)} value={password} />
 
             <button disabled={isLoading}>Sign Up</button>
-            {error && <div className="error">{error}</div> }
-        </form>
+            {error && <div className="error">{error}</div>}
+            </form>
+        </div>
     )
 }
 
