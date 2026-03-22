@@ -230,22 +230,29 @@ form.signup {
   color: var(--primary);
 }
 
-/* delete button */
-.danceclass-details span {
+/* class owner action buttons - edit and delete */
+.class-owner-actions {
   position: absolute;
   top: 18px;
   right: 18px;
+  display: flex;
+  gap: 12px;
+}
+
+.owner-action-btn {
   cursor: pointer;
   background: #f3e8da;
   border: 1px solid var(--border);
-  padding: 8px 12px;
+  padding: 10px 16px;
   border-radius: 999px;
   color: var(--primary);
   font-size: 0.86rem;
   font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.danceclass-details span:hover {
+.owner-action-btn:hover {
   background: #ead9c4;
 }
 
@@ -332,6 +339,51 @@ form button:hover,
 .danceclass-details button:hover {
   transform: translateY(-1px);
   filter: brightness(1.03);
+}
+
+/* form action buttons container */
+.form-actions {
+  display: flex;
+  gap: 14px; /* space between buttons */
+  margin-top: 20px;
+  flex-wrap: wrap; /* helps on smaller screens */
+}
+
+/* primary button (same as your current style but scoped) */
+.primary-btn {
+  background: var(--secondary);
+  border: none;
+  color: #fffdf8;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(185, 131, 47, 0.22);
+  transition: 0.2s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+/* secondary (discard) button */
+.secondary-btn {
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--border);
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.secondary-btn:hover {
+  background: var(--surface-2);
+  transform: translateY(-1px);
 }
 
 .danceclass-details button:disabled {

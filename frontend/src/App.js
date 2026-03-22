@@ -8,6 +8,7 @@ import Login from './pages/login'
 import Signup from './pages/signup'
 import Navbar from './components/Navbar'
 import Browse from './pages/browse'
+import EditClass from './pages/editclass'
 
 function App() {
   const {user} = useAuthContext()
@@ -26,6 +27,10 @@ function App() {
               path="/my-classes"
               element={user ? <Home /> : <Navigate to="/login" />}
             />
+          <Route
+            path="/classes/:id/edit"
+            element={user ? <EditClass /> : <Navigate to="/login" />}
+          />
           <Route
             path="/login" //login page
             element={!user ? <Login /> : <Navigate to="/"/>} 

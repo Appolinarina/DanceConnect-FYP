@@ -233,10 +233,10 @@ const Browse = () => {
                     onChange={(e) => setLevelFilter(e.target.value)}
                   >
                     <option value="">Any level</option>
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                    <option value="open">Open level</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                    <option value="Open">Open level</option>
                   </select>
                 </div>
 

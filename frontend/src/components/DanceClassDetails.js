@@ -1,5 +1,6 @@
 import { useDanceClassesContext } from "../hooks/useDanceClassContext"
 import { useAuthContext } from "../hooks/useAuthContext"
+import { Link } from "react-router-dom"
 
 //date fns
 import format from 'date-fns/format'
@@ -55,9 +56,14 @@ const DanceClassDetails = ({danceclass, onBook, showBook = true}) => {
             
             {/* if the user owns the class - show delete button */}
             {isOwner && (
-            <span onClick={handleDelete}>
-                Delete
-            </span>
+                <div className="class-owner-actions">
+                    <Link to={`/classes/${danceclass._id}/edit`} className="owner-action-btn">
+                        Edit Class
+                    </Link>
+                    <span className="owner-action-btn" onClick={handleDelete}>
+                        Delete Class
+                    </span>
+                </div>
             )}
 
             {/* if not owner, and we want to allow booking - show book button */}

@@ -174,23 +174,54 @@ const deleteClass = async (req, res) => {
 
 //update a class
 const updateClass = async (req, res) => {
-    const {id} = req.params //grab id from request parameters
+    const { id } = req.params //grab id from request parameters
+    const { title, dance_style, dance_level, location, date, capacity, price } = req.body
 
-    if(!mongoose.Types.ObjectId.isValid(id)){ //if no class id in database - error handling
-        return res.status(404).json({error: 'No such dance class'})
+    if (!mongoose.Types.ObjectId.isValid(id)) { //if no class id in database - error handling
+        return res.status(404).json({ error: 'No such dance class' })
+    }
+
+    let emptyFields = []
+
+    // detect empty fields when sending PATCH request
+    if (!title) {
+        emptyFields.push('title')
+    }
+    if (!dance_style) {
+        emptyFields.push('dance_style')
+    }
+    if (!dance_level) {
+        emptyFields.push('dance_level')
+    }
+    if (!location) {
+        emptyFields.push('location')
+    }
+    if (!date) {
+        emptyFields.push('date')
+    }
+    if (!capacity) {
+        emptyFields.push('capacity')
+    }
+    if (!price) {
+        emptyFields.push('price')
+    }
+
+    // if any fields left empty
+    if (emptyFields.length > 0) {
+        return res.status(400).json({ error: 'Please fill in all required fields', emptyFields })
     }
 
     const danceclass = await danceClass.findOneAndUpdate(
-        {_id: id, user_id: req.user._id}, //only allow class creator to update class
-        {...req.body}, // spread properties off object, whatever properties are in req body, would output in this object
-        {new: true}
-    ) 
+        { _id: id, user_id: req.user._id }, //only allow class creator to update class
+        { title, dance_style, dance_level, location, date, capacity, price }, //update only these fields
+        { new: true, runValidators: true } //validate new inputs so they follow the schema
+    )
 
     if (!danceclass) {
-        return res.status(404).json({error: 'No such class'})
+        return res.status(404).json({ error: 'No such class' })
     }
-    res.status(200).json(danceclass)
 
+    res.status(200).json(danceclass)
 }
 
 module.exports = {
