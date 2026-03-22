@@ -42,7 +42,7 @@ const Home = () => {
         <div className="page-panel">
             <h2 className="section-title">My Classes</h2>
             <p className="section-subtitle">
-                Manage the classes you have created and keep track of your upcoming sessions.
+                Manage the classes you have created.
             </p>
 
             {danceclasses && danceclasses.length === 0 && (

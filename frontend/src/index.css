@@ -121,7 +121,7 @@ nav a:hover {
 
 /* logo image */
 .logo {
-  width: 80px; 
+  width: 80px;  
   object-fit: contain;
 }
 
@@ -362,7 +362,7 @@ form button:hover,
   flex-wrap: wrap; /* helps on smaller screens */
 }
 
-/* primary button (same as your current style but scoped) */
+/* primary button */
 .primary-btn {
   background: var(--secondary);
   border: none;
@@ -381,8 +381,8 @@ form button:hover,
   filter: brightness(1.03);
 }
 
-/* secondary (discard) button */
-.secondary-btn {
+/* secondary (discard) button in edit form, unbook class button in my upcoming classes section */
+.secondary-btn, .danceclass-details button.unbook-btn {
   background: transparent;
   color: var(--primary);
   border: 1.5px solid var(--border);
@@ -394,7 +394,7 @@ form button:hover,
   transition: 0.2s ease;
 }
 
-.secondary-btn:hover {
+.secondary-btn:hover, .danceclass-details button.unbook-btn:hover {
   background: var(--surface-2);
   transform: translateY(-1px);
 }

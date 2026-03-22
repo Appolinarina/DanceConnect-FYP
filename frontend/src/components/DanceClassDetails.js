@@ -6,7 +6,13 @@ import { Link } from "react-router-dom"
 import format from 'date-fns/format'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
-const DanceClassDetails = ({danceclass, onBook, showBook = true}) => {
+const DanceClassDetails = ({
+    danceclass,
+    onBook,
+    onUnbook,
+    showBook = true,
+    showUnbook = false
+}) => {
     const { dispatch } = useDanceClassesContext()
     const {user} = useAuthContext()
 
@@ -51,10 +57,7 @@ const DanceClassDetails = ({danceclass, onBook, showBook = true}) => {
 
             <p>{formatDistanceToNow(new Date(danceclass.createdAt), {addSuffix: true})} </p>
 
-
-            {/* Conditional Button Logic */}
-            
-            {/* if the user owns the class - show delete button */}
+            {/* if the user owns the class - show edit/delete buttons */}
             {isOwner && (
                 <div className="class-owner-actions">
                     <Link to={`/classes/${danceclass._id}/edit`} className="owner-action-btn">
@@ -66,14 +69,26 @@ const DanceClassDetails = ({danceclass, onBook, showBook = true}) => {
                 </div>
             )}
 
-            {/* if not owner, and we want to allow booking - show book button */}
+            {/* if not owner, and booking is allowed - show book button */}
             {!isOwner && showBook && (
-            <button
-                type="button"
-                disabled={spotsRemaining <= 0}
-                onClick={() => onBook && onBook(danceclass._id)}>
-                     {spotsRemaining <= 0 ? "Full" : "Book Class"}
-            </button>
+                <button
+                    type="button"
+                    disabled={spotsRemaining <= 0}
+                    onClick={() => onBook && onBook(danceclass._id)}
+                >
+                    {spotsRemaining <= 0 ? "Full" : "Book Class"}
+                </button>
+            )}
+
+            {/* if this card is in upcoming bookings - show unbook button */}
+            {!isOwner && showUnbook && (
+                <button
+                    type="button"
+                    className="unbook-btn"
+                    onClick={() => onUnbook && onUnbook(danceclass._id)}
+                >
+                    Unbook Class
+                </button>
             )}
         </div>
     )

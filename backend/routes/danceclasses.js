@@ -9,7 +9,7 @@ const {
     updateClass
 } = require('../controllers/danceclassController')
 const requireAuth = require('../middleware/requireAuth')
-const { bookClass, getMyBookings, getMyUpcomingBookings } = require('../controllers/bookingController')
+const { bookClass, unbookClass, getMyBookings, getMyUpcomingBookings } = require('../controllers/bookingController')
 
 const router = express.Router() // express router instance
 
@@ -24,7 +24,7 @@ router.get('/:id', getClass)
 // AUTHENTICATED ROUTES
 router.use(requireAuth) // user authentication needed for the below routes
 
-// GET all classes
+// GET all classesa
 router.get('/all', getAllClasses)
 
 // GET upcoming bookings for user
@@ -35,6 +35,9 @@ router.get('/bookings/me', getMyBookings)
 
 // CREATE a class booking
 router.post('/:id/book', bookClass)
+
+// CANCEL a class booking
+router.delete('/:id/book', unbookClass)
 
 // GET all user classes
 router.get('/', getClasses)

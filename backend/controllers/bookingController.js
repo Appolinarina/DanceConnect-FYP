@@ -59,6 +59,43 @@ const bookClass = async (req, res) => {
   }
 }
 
+const unbookClass = async (req, res) => {
+  const { id: classId } = req.params
+
+  if (!mongoose.Types.ObjectId.isValid(classId)) {
+    return res.status(404).json({ error: 'No such dance class' })
+  }
+
+  const danceclass = await DanceClass.findById(classId)
+
+  if (!danceclass) {
+    return res.status(404).json({ error: 'No such dance class' })
+  }
+
+  // remove this user's booking for this class
+  const booking = await Booking.findOneAndDelete({
+    classId,
+    userId: req.user._id
+  })
+
+  if (!booking) {
+    return res.status(404).json({ error: 'You have not booked this class' })
+  }
+
+  // restore one available spot
+  const updatedClass = await DanceClass.findByIdAndUpdate(
+    classId,
+    { $inc: { spotsRemaining: 1 } },
+    { new: true }
+  )
+
+  res.status(200).json({
+    message: 'Class booking cancelled successfully',
+    classId,
+    spotsRemaining: updatedClass.spotsRemaining
+  })
+}
+
 // for showing user booked classes
 const getMyBookings = async (req, res) => {
   try {
@@ -95,4 +132,4 @@ const getMyUpcomingBookings = async (req, res) => {
   }
 }
 
-module.exports = { bookClass, getMyBookings, getMyUpcomingBookings }
+module.exports = { bookClass, unbookClass, getMyBookings, getMyUpcomingBookings }

@@ -191,6 +191,40 @@ const Browse = () => {
     await fetchBrowseClasses(appliedFilters)
   }
 
+  // unbook a class, then refresh upcoming + browse lists
+  const handleUnbook = async (classId) => {
+    if (!user) {
+      navigate("/login")
+      return
+    }
+
+    const response = await authFetch(
+      "/api/danceclasses/" + classId + "/book",
+      { method: "DELETE" },
+      user,
+      logout
+    )
+
+    if (!response) {
+      return
+    }
+
+    const json = await response.json()
+
+    if (!response.ok) {
+      setError(json.error || "Unbooking failed")
+      return
+    }
+
+    setError(null)
+
+    // refresh right column so removed booking disappears
+    await fetchMyUpcoming()
+
+    // refresh left column so spaces left updates correctly
+    await fetchBrowseClasses(appliedFilters)
+  }
+
   return (
     <div className="home">
       {/* LEFT COLUMN */}
@@ -335,12 +369,14 @@ const Browse = () => {
           <div className="empty-state">No upcoming bookings yet.</div>
         )}
 
-        {user &&
+         {user &&
           myUpcoming.map((danceclass) => (
             <DanceClassDetails
               key={danceclass._id}
               danceclass={danceclass}
               showBook={false}
+              showUnbook={true}
+              onUnbook={handleUnbook}
             />
           ))}
       </div>
