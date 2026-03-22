@@ -27,9 +27,16 @@
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
-  background:
-    radial-gradient(circle at top left, #fbf6ee 0%, #f6f1e8 45%, #efe7da 100%);
   color: var(--text);
+
+  /* background with image + beige overlay */
+  background:
+    linear-gradient(rgba(246, 241, 232, 0.6), rgba(246, 241, 232, 0.6)),
+    url("../public/images/dance_studio_blurred_beige.png");
+
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 h1, h2, h3, h4 {
@@ -252,6 +259,7 @@ form.signup {
 form.login,
 form.signup {
   max-width: 500px;
+  width: 70%;
   margin: 60px auto;
 }
 
