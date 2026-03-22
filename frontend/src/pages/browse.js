@@ -6,7 +6,7 @@ import DanceClassDetails from "../components/DanceClassDetails"
 import { authFetch } from "../utils/authFetch"
 
 const Browse = () => {
-  const { user } = useAuthContext()
+  const { user, authIsReady } = useAuthContext() //get user + check if auth has finished loading
   const { logout } = useLogout()
   const navigate = useNavigate()
 
@@ -88,6 +88,12 @@ const Browse = () => {
   // fetch all classes - left side (public endpoint)
   // runs once on page load with default filters
   useEffect(() => {
+
+    //wait until auth has been checked (prevent all existing classes showing on browse page)
+    if (!authIsReady) {
+        return
+    }
+
     const fetchInitialBrowseClasses = async () => {
       await fetchBrowseClasses({
         level: "",
@@ -99,8 +105,7 @@ const Browse = () => {
     }
 
     fetchInitialBrowseClasses()
-    // dependency array is empty because this is initial load only
-  }, [])
+  }, [authIsReady, myUpcoming]) // dependency array: re-run when auth becomes ready or bookings change
 
   // apply filters button handler (calls backend with current filter state)
   const handleApplyFilters = () => {
