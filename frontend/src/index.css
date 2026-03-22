@@ -112,6 +112,19 @@ nav a:hover {
   font-size: 0.9rem;
 }
 
+/* logo + title container */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* logo image */
+.logo {
+  width: 80px; 
+  object-fit: contain;
+}
+
 /* pages */
 .pages {
   max-width: 1400px;

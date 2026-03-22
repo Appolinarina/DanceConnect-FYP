@@ -13,7 +13,8 @@ const Navbar = () => {
   return (
     <header>
       <div className="container">
-        <Link to="/">
+        <Link to="/" className="logo-container">
+          <img src="images/logo_beige.png" alt="DanceConnect logo" className="logo" />
           <h1>DanceConnect</h1>
         </Link>
 
