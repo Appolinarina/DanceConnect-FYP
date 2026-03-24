@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react"
 import { useAuthContext } from "../hooks/useAuthContext"
 import { useLogout } from "../hooks/useLogout"
-import { useNavigate } from "react-router-dom"
 import DanceClassDetails from "../components/DanceClassDetails"
-import { authFetch } from "../utils/authFetch"
 import { useUpcomingBookings } from "../hooks/useUpcomingBookings"
+import { useBookings } from "../hooks/useBookings"
 
 const Browse = () => {
   const { user, authIsReady } = useAuthContext() //get user + check if auth has finished loading
   const { logout } = useLogout()
-  const navigate = useNavigate()
 
   const [classes, setClasses] = useState([])
   const { myUpcoming, fetchMyUpcoming } = useUpcomingBookings(user, logout) //custom hook for upcoming bookings
@@ -86,6 +84,16 @@ const Browse = () => {
     setError(null)
   }
 
+  //usebookings hook - booking and unbooking classes
+  const { handleBook, handleUnbook } = useBookings(
+    user,
+    logout,
+    fetchMyUpcoming,
+    fetchBrowseClasses,
+    appliedFilters,
+    setError
+  )
+
   // fetch all classes - left side (public endpoint)
   // runs once on page load with default filters
   useEffect(() => {
@@ -121,76 +129,6 @@ const Browse = () => {
 
     setAppliedFilters(newAppliedFilters)
     fetchBrowseClasses(newAppliedFilters)
-  }
-
-  // book a class, then refresh "My Upcoming"
-  const handleBook = async (classId) => {
-    // if not logged in, redirect to login
-    if (!user) {
-      navigate("/login")
-      return
-    }
-
-    const response = await authFetch(
-      "/api/danceclasses/" + classId + "/book",
-      { method: "POST" },
-      user,
-      logout
-    )
-
-    // if token expired, authFetch logs the user out and returns null
-    if (!response) {
-      return
-    }
-
-    const json = await response.json()
-
-    if (!response.ok) {
-      setError(json.error || "Booking failed")
-      return
-    }
-
-    setError(null)
-
-    // refresh right column so newly booked class appears
-    await fetchMyUpcoming()
-
-    // refresh left column using LAST APPLIED filters only (consistent behaviour)
-    await fetchBrowseClasses(appliedFilters)
-  }
-
-  // unbook a class, then refresh upcoming + browse lists
-  const handleUnbook = async (classId) => {
-    if (!user) {
-      navigate("/login")
-      return
-    }
-
-    const response = await authFetch(
-      "/api/danceclasses/" + classId + "/book",
-      { method: "DELETE" },
-      user,
-      logout
-    )
-
-    if (!response) {
-      return
-    }
-
-    const json = await response.json()
-
-    if (!response.ok) {
-      setError(json.error || "Unbooking failed")
-      return
-    }
-
-    setError(null)
-
-    // refresh right column so removed booking disappears
-    await fetchMyUpcoming()
-
-    // refresh left column so spaces left updates correctly
-    await fetchBrowseClasses(appliedFilters)
   }
 
   return (
