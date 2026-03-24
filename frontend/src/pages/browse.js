@@ -73,11 +73,19 @@ const Browse = () => {
       return
     }
 
-    // do not show your created classes on browse page
+    // do not show your own created classes or classes you have already booked
     let filteredClasses = json
 
     if (user && user._id) {
-      filteredClasses = json.filter((danceclass) => danceclass.user_id !== user._id)
+      const bookedClassIds = myUpcoming.map((danceclass) => danceclass._id) 
+      //get ids of all classes currently in "My Upcoming Classes"
+
+      filteredClasses = json.filter((danceclass) => 
+        danceclass.user_id !== user._id && !bookedClassIds.includes(danceclass._id)
+        //keep class only if:
+        //1. it was not created by current user
+        //2. it has not already been booked by current user
+      )
     }
 
     setClasses(filteredClasses)
