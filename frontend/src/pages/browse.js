@@ -2,16 +2,16 @@ import { useEffect, useState } from "react"
 import { useAuthContext } from "../hooks/useAuthContext"
 import { useLogout } from "../hooks/useLogout"
 import DanceClassDetails from "../components/DanceClassDetails"
+import BrowseFilters from "../components/BrowseFilters"
 import { useUpcomingBookings } from "../hooks/useUpcomingBookings"
 import { useBookings } from "../hooks/useBookings"
+import { useBrowseClasses } from "../hooks/useBrowseClasses"
 
 const Browse = () => {
   const { user, authIsReady } = useAuthContext() //get user + check if auth has finished loading
   const { logout } = useLogout()
-
-  const [classes, setClasses] = useState([])
   const { myUpcoming, fetchMyUpcoming } = useUpcomingBookings(user, logout) //custom hook for upcoming bookings
-  const [error, setError] = useState(null)
+  const { classes, error, setError, fetchBrowseClasses } = useBrowseClasses(user, myUpcoming) //custom hook for browse class fetching + filtering
 
   // Filter UI state (with Apply button)
   const [showFilters, setShowFilters] = useState(false)
@@ -33,64 +33,6 @@ const Browse = () => {
     maxPrice: "",
     sort: "date_asc",
   })
-
-  // helper function: fetch browse classes (public endpoint)
-  // backend handles filtering/sorting via query params
-  const fetchBrowseClasses = async (filters) => {
-    const params = new URLSearchParams()
-
-    // level filter (optional filter)
-    if (filters.level) {
-      params.append("level", filters.level)
-    }
-
-    // free only filter
-    if (filters.freeOnly) {
-      params.append("freeOnly", "true")
-    } else {
-      // min/max price only apply if not freeOnly
-      if (filters.minPrice !== "") {
-        params.append("minPrice", filters.minPrice)
-      }
-
-      if (filters.maxPrice !== "") {
-        params.append("maxPrice", filters.maxPrice)
-      }
-    }
-
-    // sort option
-    if (filters.sort) {
-      params.append("sort", filters.sort)
-    }
-
-    const url = `/api/danceclasses/browse?${params.toString()}`
-
-    const response = await fetch(url)
-    const json = await response.json()
-
-    if (!response.ok) {
-      setError(json.error || "Failed to load classes")
-      return
-    }
-
-    // do not show your own created classes or classes you have already booked
-    let filteredClasses = json
-
-    if (user && user._id) {
-      const bookedClassIds = myUpcoming.map((danceclass) => danceclass._id) 
-      //get ids of all classes currently in "My Upcoming Classes"
-
-      filteredClasses = json.filter((danceclass) => 
-        danceclass.user_id !== user._id && !bookedClassIds.includes(danceclass._id)
-        //keep class only if:
-        //1. it was not created by current user
-        //2. it has not already been booked by current user
-      )
-    }
-
-    setClasses(filteredClasses)
-    setError(null)
-  }
 
   //usebookings hook - booking and unbooking classes
   const { handleBook, handleUnbook } = useBookings(
@@ -160,97 +102,22 @@ const Browse = () => {
 
           {error && <div className="error">{error}</div>}
 
-          {/* Filter toggle button */}
-          <button
-            type="button"
-            className="filter-toggle"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            {showFilters ? "Hide Filters" : "Show Filters"}
-          </button>
-
-          {/* Filter panel */}
-          {showFilters && (
-            <div className="filter-panel">
-              {/* Row 1: Level + Sort */}
-              <div className="filter-row two-col">
-                <div className="filter-field">
-                  <label>Level</label>
-                  <select
-                    value={levelFilter}
-                    onChange={(e) => setLevelFilter(e.target.value)}
-                  >
-                    <option value="">Any level</option>
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                    <option value="Open">Open level</option>
-                  </select>
-                </div>
-
-                <div className="filter-field">
-                  <label>Sort by</label>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                  >
-                    <option value="date_asc">Soonest date</option>
-                    <option value="price_asc">Price: lowest first</option>
-                    <option value="price_desc">Price: highest first</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Row 2: Free only */}
-              {/* Row 2: Free + Min + Max on one line */}
-              <div className="filter-row three-col">
-                <label className="filter-checkbox">
-                  Free only
-                  <input
-                    type="checkbox"
-                    checked={freeOnly}
-                    onChange={(e) => {
-                      const checked = e.target.checked
-                      setFreeOnly(checked)
-
-                      // if user selects "Free only", clear min/max to avoid stale values
-                      if (checked) {
-                        setMinPrice("")
-                        setMaxPrice("")
-                      }
-                    }}
-                  />
-                </label>
-
-                <div className="filter-field">
-                  <label>Min Price</label>
-                  <input
-                    type="number"
-                    value={minPrice}
-                    disabled={freeOnly}
-                    onChange={(e) => setMinPrice(e.target.value)}
-                  />
-                </div>
-
-                <div className="filter-field">
-                  <label>Max Price</label>
-                  <input
-                    type="number"
-                    value={maxPrice}
-                    disabled={freeOnly}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* Row 4: Apply */}
-              <div className="filter-row">
-                <button type="button" onClick={handleApplyFilters}>
-                  Apply Filters
-                </button>
-              </div>
-            </div>
-          )}
+          {/* Browse Filters Component */}
+          <BrowseFilters
+            showFilters={showFilters}
+            setShowFilters={setShowFilters}
+            levelFilter={levelFilter}
+            setLevelFilter={setLevelFilter}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            freeOnly={freeOnly}
+            setFreeOnly={setFreeOnly}
+            minPrice={minPrice}
+            setMinPrice={setMinPrice}
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            handleApplyFilters={handleApplyFilters}
+          />
 
           {classes.length === 0 && (
             <div className="empty-state">
