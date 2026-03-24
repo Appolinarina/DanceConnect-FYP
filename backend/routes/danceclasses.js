@@ -17,14 +17,10 @@ const router = express.Router() // express router instance
 // GET all classes (for browsing - don't show classes in the past)
 router.get('/browse', getBrowseClasses)
 
-// GET a single class
-router.get('/:id', getClass)
-
-
 // AUTHENTICATED ROUTES
 router.use(requireAuth) // user authentication needed for the below routes
 
-// GET all classesa
+// GET all classes
 router.get('/all', getAllClasses)
 
 // GET upcoming bookings for user
@@ -33,17 +29,20 @@ router.get('/bookings/me/upcoming', getMyUpcomingBookings)
 // GET all user bookings
 router.get('/bookings/me', getMyBookings)
 
+// GET all user classes
+router.get('/', getClasses)
+
+// POST a new class
+router.post('/', createClass)
+
 // CREATE a class booking
 router.post('/:id/book', bookClass)
 
 // CANCEL a class booking
 router.delete('/:id/book', unbookClass)
 
-// GET all user classes
-router.get('/', getClasses)
-
-// POST a new class
-router.post('/', createClass)
+// GET a single class
+router.get('/:id', getClass)
 
 // DELETE a class
 router.delete('/:id', deleteClass)
