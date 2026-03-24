@@ -4,6 +4,7 @@ import { useLogout } from "../hooks/useLogout"
 import { useNavigate } from "react-router-dom"
 import DanceClassDetails from "../components/DanceClassDetails"
 import { authFetch } from "../utils/authFetch"
+import { useUpcomingBookings } from "../hooks/useUpcomingBookings"
 
 const Browse = () => {
   const { user, authIsReady } = useAuthContext() //get user + check if auth has finished loading
@@ -11,7 +12,7 @@ const Browse = () => {
   const navigate = useNavigate()
 
   const [classes, setClasses] = useState([])
-  const [myUpcoming, setMyUpcoming] = useState([])
+  const { myUpcoming, fetchMyUpcoming } = useUpcomingBookings(user, logout) //custom hook for upcoming bookings
   const [error, setError] = useState(null)
 
   // Filter UI state (with Apply button)
@@ -121,44 +122,6 @@ const Browse = () => {
     setAppliedFilters(newAppliedFilters)
     fetchBrowseClasses(newAppliedFilters)
   }
-
-  // fetch my bookings - right side (requires login)
-  // this endpoint is protected, so have to use authFetch
-  const fetchMyUpcoming = async () => {
-    if (!user) {
-      return
-    }
-
-    const response = await authFetch(
-      "/api/danceclasses/bookings/me/upcoming",
-      {},
-      user,
-      logout
-    ) // auth header is passed in authFetch.js
-
-    // if token expired, authFetch logs the user out and returns null
-    if (!response) {
-      return
-    }
-
-    const json = await response.json()
-
-    if (!response.ok) {
-      return
-    }
-
-    // json is a list of bookings with classId populated
-    const upcomingClasses = json
-      .map((booking) => booking.classId)
-      .filter((danceClass) => danceClass !== null)
-
-    setMyUpcoming(upcomingClasses)
-  }
-
-  // run fetchMyUpcoming when the user logs in or changes
-  useEffect(() => {
-    fetchMyUpcoming()
-  }, [user?.token])
 
   // book a class, then refresh "My Upcoming"
   const handleBook = async (classId) => {
