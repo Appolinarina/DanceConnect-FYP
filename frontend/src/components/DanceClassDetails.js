@@ -17,7 +17,7 @@ const DanceClassDetails = ({
     const {user} = useAuthContext()
 
     // if logged in user is class owner
-    const isOwner = user && danceclass.user_id === user._id
+    const isOwner = user && danceclass.user_id && danceclass.user_id.toString() === user._id.toString() //check if user exists, then if class exists, then compare the 2 with user id
 
     // spaces left stored on the class document (decreases when users book)
     const spotsRemaining = danceclass.spotsRemaining

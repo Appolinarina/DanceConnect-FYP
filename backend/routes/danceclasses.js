@@ -9,12 +9,18 @@ const {
     updateClass
 } = require('../controllers/danceclassController')
 const requireAuth = require('../middleware/requireAuth')
-const { bookClass, unbookClass, getMyBookings, getMyUpcomingBookings } = require('../controllers/bookingController')
+const {
+    bookClass,
+    unbookClass,
+    getMyBookings,
+    getMyUpcomingBookings,
+    getMyPastBookings
+} = require('../controllers/bookingController')
 
 const router = express.Router() // express router instance
 
 // PUBLIC ROUTES - NO AUTH NEEDED
-// GET all classes (for browsing - don't show classes in the past)
+// GET all classes (for browsing - dont show classes in the past)
 router.get('/browse', getBrowseClasses)
 
 // AUTHENTICATED ROUTES
@@ -25,6 +31,9 @@ router.get('/all', getAllClasses)
 
 // GET upcoming bookings for user
 router.get('/bookings/me/upcoming', getMyUpcomingBookings)
+
+// GET past bookings for user
+router.get('/bookings/me/past', getMyPastBookings)
 
 // GET all user bookings
 router.get('/bookings/me', getMyBookings)

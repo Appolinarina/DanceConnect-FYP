@@ -35,7 +35,9 @@ const Navbar = () => {
               </div>
 
               <div className="nav-user">
-                <span>{user.email}</span>
+                <Link to="/profile" className="nav-user-link">
+                  {user.email}
+                </Link>
                 <button onClick={handleLogout}>Logout</button>
               </div>
             </>

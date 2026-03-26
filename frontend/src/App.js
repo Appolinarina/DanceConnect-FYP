@@ -9,6 +9,7 @@ import Signup from './pages/signup'
 import Navbar from './components/Navbar'
 import Browse from './pages/browse'
 import EditClass from './pages/editclass'
+import MyProfile from './pages/myprofile'
 
 function App() {
   const {user} = useAuthContext()
@@ -24,9 +25,13 @@ function App() {
             element={<Browse />}
           />
           <Route
-              path="/my-classes"
-              element={user ? <Home /> : <Navigate to="/login" />}
-            />
+            path="/my-classes"
+            element={user ? <Home /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/profile"
+            element={user ? <MyProfile /> : <Navigate to="/login" />}
+          />
           <Route
             path="/classes/:id/edit"
             element={user ? <EditClass /> : <Navigate to="/login" />}

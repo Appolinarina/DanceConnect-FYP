@@ -13,6 +13,17 @@ const userSchema = new Schema ({
     password: {
         type: String,
         required: true
+    },
+    name: {
+        type: String,
+        trim: true, //remove spaces before and after input
+        default: ''
+    },
+    aboutMe: {
+        type: String,
+        trim: true,
+        maxlength: 200,
+        default: ''
     }
 
 })
@@ -33,7 +44,7 @@ userSchema.statics.signup = async function(email, password) {
         throw Error('Password not strong enough')
     }
 
-    //see if email exists in database, if it does, don't complete signup (email must be unique)
+    //see if email exists in database, if it does, do not complete signup (email must be unique)
     const exists = await this.findOne({email})
 
     if (exists) {
@@ -45,7 +56,7 @@ userSchema.statics.signup = async function(email, password) {
     const hash = await bcrypt.hash(password, salt)
 
     // store password alongside user email (create document)
-    const user = await this.create({email, password: hash}) //store hash as password in document
+    const user = await this.create({email, password: hash, name: '', aboutMe: ''})
 
     return user
 }

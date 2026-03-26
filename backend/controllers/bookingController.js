@@ -96,7 +96,7 @@ const unbookClass = async (req, res) => {
   })
 }
 
-// for showing user booked classes
+//for showing user booked classes
 const getMyBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({ userId: req.user._id })
@@ -109,13 +109,13 @@ const getMyBookings = async (req, res) => {
   }
 }
 
-// Return only upcoming bookings (future classes only)
+//return only upcoming bookings (future classes only)
 const getMyUpcomingBookings = async (req, res) => {
   try {
     const currentTime = new Date()
 
-    // 1) Find this user's bookings and populate the class
-    // 2) Only include classes where class date is in the future
+    //find this users bookings and populate the class
+    //only include classes where class date is in the future
     const bookings = await Booking.find({ userId: req.user._id })
       .populate({
         path: 'classId',
@@ -123,7 +123,7 @@ const getMyUpcomingBookings = async (req, res) => {
       })
       .sort({ createdAt: -1 })
 
-    // If a booking's class is in the past, populate will set classId to null
+    //if a bookings class is in the past, populate will set classId to null
     const upcomingBookings = bookings.filter((booking) => booking.classId !== null)
 
     res.status(200).json(upcomingBookings)
@@ -132,4 +132,35 @@ const getMyUpcomingBookings = async (req, res) => {
   }
 }
 
-module.exports = { bookClass, unbookClass, getMyBookings, getMyUpcomingBookings }
+//return only past bookings (past classes only)
+const getMyPastBookings = async (req, res) => {
+  try {
+    const currentTime = new Date()
+
+    //find this user's bookings and populate the class
+    //only include classes where class date is in the past
+    const bookings = await Booking.find({ userId: req.user._id })
+      .populate({
+        path: 'classId',
+        match: { date: { $lt: currentTime } }
+      })
+
+    //if a bookings class no longer exists or is not in the past, classId will be null
+    const pastBookings = bookings.filter((booking) => booking.classId !== null)
+
+    //sort by class date so most recent past class shows first
+    pastBookings.sort((a, b) => new Date(b.classId.date) - new Date(a.classId.date))
+
+    res.status(200).json(pastBookings)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
+module.exports = {
+  bookClass,
+  unbookClass,
+  getMyBookings,
+  getMyUpcomingBookings,
+  getMyPastBookings
+}
