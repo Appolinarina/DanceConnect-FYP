@@ -91,7 +91,7 @@ const MyProfile = () => {
   }, [user?.token])
 
   //check if the user changed any profile field
-  const hasChanges = useMemo(() => {
+  const hasChanges = useMemo(() => { //useMemo hook to cache result between re-renders
     if (!profile) {
       return false
     }

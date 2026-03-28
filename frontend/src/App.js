@@ -12,7 +12,12 @@ import EditClass from './pages/editclass'
 import MyProfile from './pages/myprofile'
 
 function App() {
-  const {user} = useAuthContext()
+  const {user, authIsReady} = useAuthContext()
+
+  if (!authIsReady) { //do not render routes until auth is ready
+    return null
+  }
+
   return (  //all link components need to be inside BrowserRouter
     <div className="App"> 
       <BrowserRouter> 
