@@ -15,9 +15,9 @@ export const danceclassReducer = (state, action) => { //previous state (reliable
             }
         case 'UPDATE_DANCECLASS':
             return {
-                danceclasses: state.danceclasses.map((danceclass) => // loop through all exisitng classes
+                danceclasses: state.danceclasses ? state.danceclasses.map((danceclass) => // loop through all exisitng classes
                     danceclass._id === action.payload._id ? action.payload : danceclass //if class id matches updated one, then replace, otherwise keep original class
-                )
+                ) : [action.payload]
             }
         case 'DELETE_DANCECLASS':
             return { //filter through all classes, True if we want it to remain, False to take it out of new array
