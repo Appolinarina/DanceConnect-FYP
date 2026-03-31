@@ -7,6 +7,7 @@ const User = require('../models/userModel')
 
 let mongoServer
 
+// connect to in-memory database before running tests
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create()
   const uri = mongoServer.getUri()
@@ -14,10 +15,12 @@ beforeAll(async () => {
   await mongoose.connect(uri)
 })
 
+// clear users after each test so tests do not affect each other
 afterEach(async () => {
   await User.deleteMany({})
 })
 
+// close database connection after all tests finish
 afterAll(async () => {
   await mongoose.connection.dropDatabase()
   await mongoose.connection.close()
@@ -25,6 +28,7 @@ afterAll(async () => {
 })
 
 describe('User API', () => {
+  // test successful signup
   test('POST /api/user/signup should sign up a user successfully', async () => {
     const res = await request(app)
       .post('/api/user/signup')
@@ -39,6 +43,7 @@ describe('User API', () => {
     expect(res.body).toHaveProperty('_id')
   })
 
+  // test signup fails if email is already in use
   test('POST /api/user/signup should fail if email already exists', async () => {
     await request(app)
       .post('/api/user/signup')
@@ -58,6 +63,7 @@ describe('User API', () => {
     expect(res.body).toHaveProperty('error', 'Email already in use')
   })
 
+  // test successful login
   test('POST /api/user/login should log in an existing user', async () => {
     await request(app)
       .post('/api/user/signup')
@@ -79,6 +85,7 @@ describe('User API', () => {
     expect(res.body).toHaveProperty('_id')
   })
 
+  // test login fails with incorrect password
   test('POST /api/user/login should fail with wrong password', async () => {
     await request(app)
       .post('/api/user/signup')
@@ -98,6 +105,7 @@ describe('User API', () => {
     expect(res.body).toHaveProperty('error', 'Incorrect password')
   })
 
+  // test protected route fails without token
   test('GET /api/user/me should fail without token', async () => {
     const res = await request(app)
       .get('/api/user/me')
