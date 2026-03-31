@@ -40,8 +40,8 @@ const EditClass = () => {
                 setDanceStyle(json.dance_style || "")
                 setDanceLevel(json.dance_level || "")
                 setLocation(json.location || "")
-                setCapacity(json.capacity || "")
-                setPrice(json.price || "")
+                setCapacity(json.capacity ?? "")
+                setPrice(json.price ?? "")
 
                 // convert date into format compatible with datetime-local input
                 if (json.date) {
@@ -184,6 +184,7 @@ const EditClass = () => {
                     step="0.01"
                     onChange={(e) => setPrice(e.target.value)}
                     onBlur={() => {
+                        if (price === "") return
                         const n = Number(price)
                         if (!Number.isNaN(n)) setPrice(n.toFixed(2))
                     }}

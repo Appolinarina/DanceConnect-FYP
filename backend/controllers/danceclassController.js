@@ -134,7 +134,7 @@ const createClass = async (req, res) => {
     if(!capacity) {
         emptyFields.push('capacity')
     }
-    if(!price) {
+    if(price === undefined || price === null || price === '') {
         emptyFields.push('price')
     }
 
@@ -202,7 +202,7 @@ const updateClass = async (req, res) => {
     if (!capacity) {
         emptyFields.push('capacity')
     }
-    if (!price) {
+    if (price === undefined || price === null || price === '') {
         emptyFields.push('price')
     }
 

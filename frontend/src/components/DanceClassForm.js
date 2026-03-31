@@ -126,6 +126,7 @@ const DanceClassForm = () => {
                 step="0.01" //increment/decrement by 0.01 (i.e. to have 2 d.p.)
                 onChange={(e) => setPrice(e.target.value)}  
                 onBlur={() => {
+                    if (price === "") return
                     const n = Number(price)
                     if (!Number.isNaN(n)) setPrice(n.toFixed(2)) //onBlur 2 d.p. format shows up after user clicks away
                 }}
