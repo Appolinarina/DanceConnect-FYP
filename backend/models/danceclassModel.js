@@ -41,4 +41,6 @@ const danceClassSchema = new Schema({
     }
 }, {timestamps: true}) //to automatically add timestamps property
 
+danceClassSchema.index({ date: 1 }) //date index
+
 module.exports = mongoose.model('danceClass', danceClassSchema)

@@ -44,7 +44,7 @@ const Browse = () => {
     setError
   )
 
-  // fetch all classes - left side (public endpoint)
+  // fetch browse classes (left column) using current filters
   // runs once on page load with default filters
   useEffect(() => {
 
