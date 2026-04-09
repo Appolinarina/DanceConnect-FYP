@@ -509,6 +509,72 @@ div.error {
   z-index: 9999;
 }
 
+/* browse search bar */
+.browse-search-bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: end;
+  margin: 16px 0;
+}
+
+.browse-search-field label {
+  display: block;
+  font-size: 0.92rem;
+  margin-bottom: 6px;
+  color: var(--primary);
+}
+
+.browse-search-field input {
+  margin-bottom: 0;
+}
+
+.browse-search-btn {
+  background: var(--secondary);
+  border: none;
+  color: #fffdf8;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(185, 131, 47, 0.22);
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+.browse-search-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+/* filter action buttons row */
+.filter-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* clear filters button */
+.clear-filters-btn {
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--border);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-filters-btn:hover {
+  background: var(--surface-2);
+  transform: translateY(-1px);
+}
+
+
 /* filter panel */
 .filter-panel {
   margin: 16px 0 22px;
@@ -598,6 +664,10 @@ div.error {
 
   .sidebar-panel {
     position: static;
+  }
+
+  .browse-search-bar {
+    grid-template-columns: 1fr;
   }
 
   .filter-row.two-col,

@@ -1,6 +1,10 @@
 const BrowseFilters = ({
     showFilters,
     setShowFilters,
+    searchTerm,
+    setSearchTerm,
+    handleSearch,
+    handleSearchKeyDown,
     levelFilter,
     setLevelFilter,
     sortBy,
@@ -11,10 +15,34 @@ const BrowseFilters = ({
     setMinPrice,
     maxPrice,
     setMaxPrice,
-    handleApplyFilters
+    handleApplyFilters,
+    handleClearFilters
 }) => {
     return (
         <>
+            {/* Search bar - above filters panel */}
+            <div className="browse-search-bar">
+                <div className="browse-search-field">
+                    <label htmlFor="browse-search">Search classes</label>
+                    <input
+                        id="browse-search"
+                        type="text"
+                        placeholder="Search by class name, style, or location"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onKeyDown={handleSearchKeyDown} //pressing enter applies search only
+                    />
+                </div>
+
+                <button
+                    type="button"
+                    className="browse-search-btn"
+                    onClick={handleSearch}
+                >
+                    Search
+                </button>
+            </div>
+
             {/* Filter toggle button */}
             <button
                 type="button"
@@ -97,10 +125,18 @@ const BrowseFilters = ({
                         </div>
                     </div>
 
-                    {/* Row 3: Apply filters button */}
-                    <div className="filter-row">
+                    {/* Row 3: Apply filters + clear filters buttons */}
+                    <div className="filter-actions">
                         <button type="button" onClick={handleApplyFilters}>
                             Apply Filters
+                        </button>
+
+                        <button
+                            type="button"
+                            className="clear-filters-btn"
+                            onClick={handleClearFilters}
+                        >
+                            Clear Filters
                         </button>
                     </div>
                 </div>

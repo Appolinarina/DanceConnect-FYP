@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { useDanceClassesContext } from "../hooks/useDanceClassContext"
 import { useAuthContext } from "../hooks/useAuthContext"
 import { authFetch } from "../utils/authFetch"
 
 const EditClass = () => {
     const { id } = useParams() // get class id from URL
     const navigate = useNavigate() // used to redirect after saving
-    const { dispatch } = useDanceClassesContext() // update global state
     const { user } = useAuthContext() // get logged in user
 
     // form state (pre-filled with existing class data)
@@ -40,7 +38,7 @@ const EditClass = () => {
                 setDanceStyle(json.dance_style || "")
                 setDanceLevel(json.dance_level || "")
                 setLocation(json.location || "")
-                setCapacity(json.capacity ?? "")
+                setCapacity(json.capacity ?? "") // ?? to allow values of 0
                 setPrice(json.price ?? "")
 
                 // convert date into format compatible with datetime-local input
@@ -77,17 +75,11 @@ const EditClass = () => {
             price
         }
 
-        const response = await authFetch(
-            `/api/danceclasses/${id}`,
-            {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(updatedClass)
-            },
-            user
-        )
+        const response = await authFetch(`/api/danceclasses/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedClass)
+        }, user)
 
         if (!response) {
             return
@@ -103,7 +95,6 @@ const EditClass = () => {
         if (response.ok) {
             setError(null)
             setEmptyFields([])
-            dispatch({ type: "UPDATE_DANCECLASS", payload: json })
             navigate("/my-classes")
         }
     }
@@ -130,7 +121,7 @@ const EditClass = () => {
                     type="text"
                     onChange={(e) => setTitle(e.target.value)}
                     value={title}
-                    className={emptyFields.includes('title') ? 'error' : ''}
+                    className={emptyFields.includes("title") ? "error" : ""}
                 />
 
                 <label>Dance style:</label>
@@ -138,14 +129,14 @@ const EditClass = () => {
                     type="text"
                     onChange={(e) => setDanceStyle(e.target.value)}
                     value={dance_style}
-                    className={emptyFields.includes('dance_style') ? 'error' : ''}
+                    className={emptyFields.includes("dance_style") ? "error" : ""}
                 />
 
                 <label>Dance level:</label>
                 <select
                     onChange={(e) => setDanceLevel(e.target.value)}
                     value={dance_level}
-                    className={emptyFields.includes('dance_level') ? 'error' : ''}
+                    className={emptyFields.includes("dance_level") ? "error" : ""}
                 >
                     <option value="">Select level</option>
                     <option value="Beginner">Beginner</option>
@@ -159,7 +150,7 @@ const EditClass = () => {
                     type="text"
                     onChange={(e) => setLocation(e.target.value)}
                     value={location}
-                    className={emptyFields.includes('location') ? 'error' : ''}
+                    className={emptyFields.includes("location") ? "error" : ""}
                 />
 
                 <label>Date and time:</label>
@@ -167,7 +158,7 @@ const EditClass = () => {
                     type="datetime-local"
                     onChange={(e) => setDate(e.target.value)}
                     value={date}
-                    className={emptyFields.includes('date') ? 'error' : ''}
+                    className={emptyFields.includes("date") ? "error" : ""}
                 />
 
                 <label>Capacity:</label>
@@ -175,7 +166,7 @@ const EditClass = () => {
                     type="number"
                     onChange={(e) => setCapacity(e.target.value)}
                     value={capacity}
-                    className={emptyFields.includes('capacity') ? 'error' : ''}
+                    className={emptyFields.includes("capacity") ? "error" : ""}
                 />
 
                 <label>Price:</label>
@@ -189,7 +180,7 @@ const EditClass = () => {
                         if (!Number.isNaN(n)) setPrice(n.toFixed(2))
                     }}
                     value={price}
-                    className={emptyFields.includes('price') ? 'error' : ''}
+                    className={emptyFields.includes("price") ? "error" : ""}
                 />
 
                 <div className="form-actions">

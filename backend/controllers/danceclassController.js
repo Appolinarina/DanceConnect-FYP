@@ -29,6 +29,19 @@ const getBrowseClasses = async (req, res) => {
       date: { $gt: now }
     }
 
+    // KEYWORD SEARCH
+    // search by title, dance style, or location
+    // partial match + case-insensitive
+    const search = req.query.search?.trim()
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } }, // look at title field in mongodb, match search to title value, use regular expression
+        { dance_style: { $regex: search, $options: "i" } }, // i for case insensitive
+        { location: { $regex: search, $options: "i" } }
+      ]
+    }
+
     // Filter by level: beginner / intermediate / advanced / open
     const level = req.query.level
     if (level) {

@@ -10,11 +10,16 @@ import DanceClassForm from '../components/DanceClassForm'
 
 const Home = () => {
     const {danceclasses, dispatch} = useDanceClassesContext() // danceclasses null initially, updates with dispatch
-    const {user} = useAuthContext()
+    const {user, authIsReady} = useAuthContext()
     const { logout } = useLogout()
     
 
     useEffect(() =>{
+        // wait until auth is checked (prevent class fetch until user confirmed)
+        if (!authIsReady) {
+            return
+        }
+
         const fetchDanceClasses = async () => {
 
 
@@ -36,7 +41,7 @@ const Home = () => {
         if (user) {
             fetchDanceClasses()
         }
-    }, [dispatch, user]) // rerurn useEffect if dispatch functions changes, (+ added user as dependency)
+    }, [dispatch, user, logout]) // rerurn useEffect if dispatch functions changes, (+ added user as dependency)
    return (
     <div className="home">
         <div className="page-panel">

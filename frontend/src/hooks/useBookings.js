@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { authFetch } from "../utils/authFetch"
 
-export const useBookings = (user, logout, fetchMyUpcoming, fetchBrowseClasses, appliedFilters, setError) => {
+export const useBookings = (user, logout, fetchMyUpcoming, fetchBrowseClasses, appliedFilters, appliedSearchTerm, setError) => {
     const navigate = useNavigate()
 
     // handle booking a class
@@ -31,7 +31,11 @@ export const useBookings = (user, logout, fetchMyUpcoming, fetchBrowseClasses, a
         await fetchMyUpcoming()
 
         // refresh browse list (left column)
-        await fetchBrowseClasses(appliedFilters)
+        //keep the currently applied filters + search term after booking
+        await fetchBrowseClasses({
+            ...appliedFilters, //spread all properties from appliedFilters into new object
+            search: appliedSearchTerm, //apply keyword search
+        })
     }
 
     // handle unbooking a class
@@ -60,7 +64,11 @@ export const useBookings = (user, logout, fetchMyUpcoming, fetchBrowseClasses, a
         await fetchMyUpcoming()
 
         // refresh browse list
-        await fetchBrowseClasses(appliedFilters)
+        //keep the currently applied filters + search term after unbooking
+        await fetchBrowseClasses({
+            ...appliedFilters,
+            search: appliedSearchTerm,
+        })
     }
 
     return { handleBook, handleUnbook }

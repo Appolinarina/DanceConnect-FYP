@@ -16,6 +16,9 @@ const Browse = () => {
   // Filter UI state (with Apply button)
   const [showFilters, setShowFilters] = useState(false)
 
+  //search bar UI state
+  const [searchTerm, setSearchTerm] = useState("")
+
   const [levelFilter, setLevelFilter] = useState("")
   const [freeOnly, setFreeOnly] = useState(false)
 
@@ -34,6 +37,10 @@ const Browse = () => {
     sort: "date_asc",
   })
 
+  //stores the last search term the user actually applied
+  //this is kept separate from the text box so pressing Enter only applies search
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState("")
+
   //usebookings hook - booking and unbooking classes
   const { handleBook, handleUnbook } = useBookings(
     user,
@@ -41,6 +48,7 @@ const Browse = () => {
     fetchMyUpcoming,
     fetchBrowseClasses,
     appliedFilters,
+    appliedSearchTerm,
     setError
   )
 
@@ -60,11 +68,34 @@ const Browse = () => {
         minPrice: "",
         maxPrice: "",
         sort: "date_asc",
+        search: "",
       })
     }
 
     fetchInitialBrowseClasses()
-  }, [authIsReady, myUpcoming]) // dependency array: re-run when auth becomes ready or bookings change
+  }, [authIsReady, myUpcoming]) // dependency array: rerun when auth becomes ready or bookings change
+
+  //search handler (applies only the keyword search, not open filter changes)
+  const handleSearch = () => {
+    const trimmedSearch = searchTerm.trim()
+
+    //save current search term as the last applied search
+    setAppliedSearchTerm(trimmedSearch)
+
+    //fetch using last applied filters + current search term
+    fetchBrowseClasses({
+      ...appliedFilters,
+      search: trimmedSearch,
+    })
+  }
+
+  //apply search when pressing Enter in search box
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      handleSearch()
+    }
+  }
 
   // apply filters button handler (calls backend with current filter state)
   const handleApplyFilters = () => {
@@ -78,7 +109,42 @@ const Browse = () => {
     }
 
     setAppliedFilters(newAppliedFilters)
-    fetchBrowseClasses(newAppliedFilters)
+
+    //apply filters together with whatever is currently in the search bar
+    const trimmedSearch = searchTerm.trim()
+    setAppliedSearchTerm(trimmedSearch)
+
+    fetchBrowseClasses({
+      ...newAppliedFilters,
+      search: trimmedSearch,
+    })
+  }
+
+  //clear only the expandable panel filters and keep the search bar as it is
+  const handleClearFilters = () => {
+    //reset filter ui state back to default browse page state
+    setLevelFilter("")
+    setFreeOnly(false)
+    setMinPrice("")
+    setMaxPrice("")
+    setSortBy("date_asc")
+
+    const clearedFilters = {
+      level: "",
+      freeOnly: false,
+      minPrice: "",
+      maxPrice: "",
+      sort: "date_asc",
+    }
+
+    //save cleared filters as the new applied filters
+    setAppliedFilters(clearedFilters)
+
+    //refetch classes with cleared filters but keep the already applied search term
+    fetchBrowseClasses({
+      ...clearedFilters,
+      search: appliedSearchTerm,
+    })
   }
 
   return (
@@ -106,6 +172,10 @@ const Browse = () => {
           <BrowseFilters
             showFilters={showFilters}
             setShowFilters={setShowFilters}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            handleSearch={handleSearch}
+            handleSearchKeyDown={handleSearchKeyDown}
             levelFilter={levelFilter}
             setLevelFilter={setLevelFilter}
             sortBy={sortBy}
@@ -117,6 +187,7 @@ const Browse = () => {
             maxPrice={maxPrice}
             setMaxPrice={setMaxPrice}
             handleApplyFilters={handleApplyFilters}
+            handleClearFilters={handleClearFilters}
           />
 
           {classes.length === 0 && (

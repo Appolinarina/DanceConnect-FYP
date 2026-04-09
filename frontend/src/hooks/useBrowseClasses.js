@@ -9,6 +9,11 @@ export const useBrowseClasses = (user, myUpcoming) => {
     const fetchBrowseClasses = async (filters) => {
         const params = new URLSearchParams()
 
+        //search term (optional keyword search)
+        if (filters.search && filters.search.trim() !== "") {
+            params.append("search", filters.search.trim())
+        }
+
         // level filter (optional filter)
         if (filters.level) {
             params.append("level", filters.level)
