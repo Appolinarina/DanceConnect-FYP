@@ -210,4 +210,59 @@ describe('Create Class Page', () => {
     cy.get('input[type="number"]').eq(0).should('have.class', 'error')
     cy.get('input[type="number"]').eq(1).should('have.class', 'error')
   })
+
+  it('does not submit the form when capacity and price are negative', () => {
+    // mock initial fetch for user created classes
+    cy.intercept('GET', '**/api/danceclasses', {
+      statusCode: 200,
+      body: []
+    }).as('getDanceClasses')
+
+    // mock follow-up requests so fake token does not cause 401 logout
+    cy.intercept('GET', '**/api/danceclasses/bookings/me/upcoming', {
+      statusCode: 200,
+      body: []
+    }).as('upcomingBookings')
+
+    cy.intercept('GET', '**/api/danceclasses/browse*', {
+      statusCode: 200,
+      body: []
+    }).as('browseClasses')
+
+    // spy on create request - it should not happen
+    cy.intercept('POST', '**/api/danceclasses', {
+      statusCode: 200,
+      body: {}
+    }).as('createDanceClass')
+
+    // visit protected my classes page with user already in local storage
+    cy.visit('/my-classes', {
+      onBeforeLoad(win) {
+        win.localStorage.setItem(
+          'user',
+          JSON.stringify({
+            email: 'testuser@email.com',
+            token: 'fake-jwt-token',
+            _id: '123abc'
+          })
+        )
+      }
+    })
+
+    cy.wait('@getDanceClasses')
+
+    // fill in form with negative values
+    cy.get('input[type="text"]').eq(0).type('Hip Hop Beginners')
+    cy.get('input[type="text"]').eq(1).type('Hip Hop')
+    cy.get('select').select('Beginner')
+    cy.get('input[type="text"]').eq(2).type('Dublin')
+    cy.get('input[type="datetime-local"]').type('2026-04-15T18:30')
+    cy.get('input[type="number"]').eq(0).type('-5')
+    cy.get('input[type="number"]').eq(1).type('-10')
+
+    cy.contains('button', 'Create Class').click()
+
+    // browser validation should block submission, so no request is sent
+    cy.get('@createDanceClass.all').should('have.length', 0)
+  })
 })

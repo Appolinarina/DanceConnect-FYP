@@ -19,6 +19,7 @@ const EditClass = () => {
 
     const [error, setError] = useState(null) // error handling
     const [emptyFields, setEmptyFields] = useState([]) // state for empty fields
+    const [invalidFields, setInvalidFields] = useState([]) // state for invalid fields
     const [isLoading, setIsLoading] = useState(true) // loading state while fetching class
 
     // fetch class data when page loads
@@ -90,11 +91,13 @@ const EditClass = () => {
         if (!response.ok) {
             setError(json.error)
             setEmptyFields(json.emptyFields || [])
+            setInvalidFields(json.invalidFields || [])
         }
 
         if (response.ok) {
             setError(null)
             setEmptyFields([])
+            setInvalidFields([])
             navigate("/my-classes")
         }
     }
@@ -164,14 +167,16 @@ const EditClass = () => {
                 <label>Capacity:</label>
                 <input
                     type="number"
+                    min="0"
                     onChange={(e) => setCapacity(e.target.value)}
                     value={capacity}
-                    className={emptyFields.includes("capacity") ? "error" : ""}
+                    className={emptyFields.includes("capacity") || invalidFields.includes("capacity") ? "error" : ""}
                 />
 
                 <label>Price:</label>
                 <input
                     type="number"
+                    min="0"
                     step="0.01"
                     onChange={(e) => setPrice(e.target.value)}
                     onBlur={() => {
@@ -180,7 +185,7 @@ const EditClass = () => {
                         if (!Number.isNaN(n)) setPrice(n.toFixed(2))
                     }}
                     value={price}
-                    className={emptyFields.includes("price") ? "error" : ""}
+                    className={emptyFields.includes("price") || invalidFields.includes("price") ? "error" : ""}
                 />
 
                 <div className="form-actions">

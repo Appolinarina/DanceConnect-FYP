@@ -127,6 +127,7 @@ const createClass = async (req, res) => {
     const {title, dance_style, dance_level, location, date, capacity, price} = req.body
 
     let emptyFields = [] 
+    let invalidFields = []
 
     //detect empty fields when sending POST request
     if(!title) {
@@ -144,7 +145,7 @@ const createClass = async (req, res) => {
     if(!date) {
         emptyFields.push('date')
     }
-    if(!capacity) {
+    if(capacity === undefined || capacity === null || capacity === '') {
         emptyFields.push('capacity')
     }
     if(price === undefined || price === null || price === '') {
@@ -156,11 +157,31 @@ const createClass = async (req, res) => {
         return res.status(400).json({error:'Please fill in all required fields', emptyFields})
     }
 
+    // convert to numbers
+    const capacityNum = Number(capacity)
+    const priceNum = Number(price)
+
+    // validate numbers
+    if (Number.isNaN(capacityNum) || capacityNum < 0) {
+        invalidFields.push('capacity')
+    }
+
+    if (Number.isNaN(priceNum) || priceNum < 0) {
+        invalidFields.push('price')
+    }
+
+    if (invalidFields.length > 0) {
+        return res.status(400).json({
+            error: 'Capacity or price cannot be negative',
+            invalidFields
+        })
+    }
+
     //add doc to db
         try {
             const user_id = req.user._id
-            const spotsRemaining = capacity
-            const danceclass = await danceClass.create({title, dance_style, dance_level, location, date, capacity, price, user_id, spotsRemaining})
+            const spotsRemaining = capacityNum
+            const danceclass = await danceClass.create({title, dance_style, dance_level, location, date, capacity: capacityNum, price: priceNum, user_id, spotsRemaining})
             res.status(200).json(danceclass)
         } catch (error){
             res.status(400).json({error: error.message})
@@ -195,6 +216,7 @@ const updateClass = async (req, res) => {
     }
 
     let emptyFields = []
+    let invalidFields = []
 
     // detect empty fields when sending PATCH request
     if (!title) {
@@ -212,7 +234,7 @@ const updateClass = async (req, res) => {
     if (!date) {
         emptyFields.push('date')
     }
-    if (!capacity) {
+    if (price === undefined || price === null || price === '') {
         emptyFields.push('capacity')
     }
     if (price === undefined || price === null || price === '') {
@@ -224,9 +246,29 @@ const updateClass = async (req, res) => {
         return res.status(400).json({ error: 'Please fill in all required fields', emptyFields })
     }
 
+    // convert to numbers
+    const capacityNum = Number(capacity)
+    const priceNum = Number(price)
+
+    // validate numbers
+    if (Number.isNaN(capacityNum) || capacityNum < 0) {
+        invalidFields.push('capacity')
+    }
+
+    if (Number.isNaN(priceNum) || priceNum < 0) {
+        invalidFields.push('price')
+    }
+
+    if (invalidFields.length > 0) {
+        return res.status(400).json({
+            error: 'Capacity or price cannot be negative',
+            invalidFields
+        })
+    }
+
     const danceclass = await danceClass.findOneAndUpdate(
         { _id: id, user_id: req.user._id }, //only allow class creator to update class
-        { title, dance_style, dance_level, location, date, capacity, price }, //update only these fields
+        { title, dance_style, dance_level, location, date, capacity: capacityNum, price: priceNum }, //update only these fields
         { new: true, runValidators: true } //validate new inputs so they follow the schema
     )
 

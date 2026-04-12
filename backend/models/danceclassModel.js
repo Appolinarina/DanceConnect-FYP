@@ -25,11 +25,13 @@ const danceClassSchema = new Schema({
     },
     capacity: {
         type: Number,
-        required: true
+        required: true,
+        min: [0, 'Capacity cannot be negative']
     },
     price: {
         type: Number,
-        required: true
+        required: true,
+        min: [0, 'Price cannot be negative']
     },
     user_id: {
         type: String,
@@ -37,7 +39,8 @@ const danceClassSchema = new Schema({
     },
     spotsRemaining: {
         type: Number,
-        required: true
+        required: true,
+        min: [0, 'Spots remaining cannot be negative']
     }
 }, {timestamps: true}) //to automatically add timestamps property
 

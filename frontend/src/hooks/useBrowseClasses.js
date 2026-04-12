@@ -1,11 +1,11 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
 export const useBrowseClasses = (user, myUpcoming) => {
-    const [classes, setClasses] = useState([]) //store browse classes
+    const [allClasses, setAllClasses] = useState([]) //store raw browse classes returned from backend
     const [error, setError] = useState(null) //store browse fetch errors
 
     // helper function: fetch browse classes from backend (public endpoint)
-    // applies filters via query params and removes own/booked classes
+    // applies filters via query params
     const fetchBrowseClasses = async (filters) => {
         const params = new URLSearchParams()
 
@@ -49,14 +49,20 @@ export const useBrowseClasses = (user, myUpcoming) => {
             return
         }
 
-        // do not show your own created classes or classes already booked by current user
-        let filteredClasses = json
+        setAllClasses(json) //store backend results before removing own/booked classes locally
+        setError(null) //clear previous error if fetch succeeded
+    }
+
+    // remove own created classes or already booked classes from the fetched list
+    // this runs locally whenever user or myUpcoming changes, so we do not need to refetch from backend
+    const classes = useMemo(() => { //useMemo caches result of calculation between re-renders, to avoid re-calculating filter on every render
+        let filteredClasses = allClasses
 
         if (user && user._id) {
             const bookedClassIds = myUpcoming.map((danceclass) => danceclass._id) 
             //get ids of all classes currently in "My Upcoming Classes"
 
-            filteredClasses = json.filter((danceclass) => 
+            filteredClasses = allClasses.filter((danceclass) => 
                 danceclass.user_id !== user._id && !bookedClassIds.includes(danceclass._id)
                 //keep class only if:
                 //1. it was not created by current user
@@ -64,9 +70,8 @@ export const useBrowseClasses = (user, myUpcoming) => {
             )
         }
 
-        setClasses(filteredClasses) //update browse classes shown on page
-        setError(null) //clear previous error if fetch succeeded
-    }
+        return filteredClasses
+    }, [allClasses, user, myUpcoming])
 
     return { classes, error, setError, fetchBrowseClasses }
 }

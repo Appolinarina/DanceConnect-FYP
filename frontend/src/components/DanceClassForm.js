@@ -19,6 +19,7 @@ const DanceClassForm = () => {
 
     const [error, setError] = useState(null) 
     const [emptyFields, setEmptyFields] = useState([]) //state for empty fields
+    const [invalidFields, setInvalidFields] = useState([]) //state for invalid fields
 
 
     const handleSubmit = async (e) => {
@@ -43,7 +44,8 @@ const DanceClassForm = () => {
 
         if (!response.ok) {
             setError(json.error)
-            setEmptyFields(json.emptyFields)
+            setEmptyFields(json.emptyFields || [])
+            setInvalidFields(json.emptyFields || [])
         }
 
         if (response.ok) {
@@ -57,6 +59,7 @@ const DanceClassForm = () => {
             setPrice('')
             setError(null)
             setEmptyFields([])
+            setInvalidFields([])
             console.log('New Dance Class Created', json)
             dispatch({type: 'CREATE_DANCECLASS', payload: json}) //dispatch only if response is ok, to update context state, so to re-render the home component
             showToast("Your class has been successfully created") //show popup
@@ -115,14 +118,16 @@ const DanceClassForm = () => {
             <label>Capacity:</label>
             <input
                 type="number"
+                min="0"
                 onChange={(e) => setCapacity(e.target.value)} 
                 value={capacity}
-                className={emptyFields.includes('capacity') ? 'error' : ''}
+                className={emptyFields.includes('capacity') || invalidFields.includes('capacity') ? 'error' : ''}
             />
 
             <label>Price:</label>
             <input
                 type="number"
+                min="0"
                 step="0.01" //increment/decrement by 0.01 (i.e. to have 2 d.p.)
                 onChange={(e) => setPrice(e.target.value)}  
                 onBlur={() => {
@@ -131,7 +136,7 @@ const DanceClassForm = () => {
                     if (!Number.isNaN(n)) setPrice(n.toFixed(2)) //onBlur 2 d.p. format shows up after user clicks away
                 }}
                 value={price}
-                className={emptyFields.includes('price') ? 'error' : ''}
+                className={emptyFields.includes('price') || invalidFields.includes("price") ? 'error' : ''}
             /> 
             <button>Create Class</button>
             {error && <div className="error">{error}</div>} 

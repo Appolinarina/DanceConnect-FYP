@@ -287,4 +287,57 @@ describe('Edit Class', () => {
     // check original class is still shown
     cy.contains('Hip Hop Beginners').should('be.visible')
   })
+
+  it('does not submit the form when capacity and price are negative', () => {
+    const existingClass = {
+      _id: 'class1',
+      title: 'Hip Hop Beginners',
+      dance_style: 'Hip Hop',
+      dance_level: 'Beginner',
+      location: 'Dublin',
+      date: '2026-04-15T18:30:00.000Z',
+      capacity: 20,
+      spotsRemaining: 20,
+      price: 10,
+      user_id: '123abc',
+      createdAt: '2026-03-28T12:00:00.000Z'
+    }
+
+    // mock fetch for existing class data
+    cy.intercept('GET', '**/api/danceclasses/class1', {
+      statusCode: 200,
+      body: existingClass
+    }).as('getClass')
+
+    // spy on update request - it should not happen
+    cy.intercept('PATCH', '**/api/danceclasses/class1', {
+      statusCode: 200,
+      body: existingClass
+    }).as('updateClass')
+
+    // visit edit class page with logged in user already in local storage
+    cy.visit('/classes/class1/edit', {
+      onBeforeLoad(win) {
+        win.localStorage.setItem(
+          'user',
+          JSON.stringify({
+            email: 'testuser@email.com',
+            token: 'fake-jwt-token',
+            _id: '123abc'
+          })
+        )
+      }
+    })
+
+    cy.wait('@getClass')
+
+    // enter negative values
+    cy.get('input[type="number"]').eq(0).clear().type('-5')
+    cy.get('input[type="number"]').eq(1).clear().type('-10')
+
+    cy.contains('button', 'Save Changes').click()
+
+    // browser validation should block submission, so no request is sent
+    cy.get('@updateClass.all').should('have.length', 0)
+  })
 })

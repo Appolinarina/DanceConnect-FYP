@@ -73,7 +73,9 @@ const Browse = () => {
     }
 
     fetchInitialBrowseClasses()
-  }, [authIsReady, myUpcoming]) // dependency array: rerun when auth becomes ready or bookings change
+    // only refetch from backend when auth becomes ready
+    // booked classes are now removed locally inside useBrowseClasses when myUpcoming changes
+  }, [authIsReady]) // dependency array: rerun when auth becomes ready
 
   //search handler (applies only the keyword search, not open filter changes)
   const handleSearch = () => {
