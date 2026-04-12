@@ -19,6 +19,8 @@ const EditClass = () => {
     const [capacity, setCapacity] = useState("")
     const [price, setPrice] = useState("")
 
+    const [minCapacity, setMinCapacity] = useState(0) // minimum allowed capacity based on places already booked
+
     const [error, setError] = useState(null) // error handling
     const [emptyFields, setEmptyFields] = useState([]) // state for empty fields
     const [invalidFields, setInvalidFields] = useState([]) // state for invalid fields
@@ -43,6 +45,11 @@ const EditClass = () => {
                 setLocation(json.location || "")
                 setCapacity(json.capacity ?? "") // ?? to allow values of 0
                 setPrice(json.price ?? "")
+
+                // work out how many places are already booked
+                // capacity cannot go lower than this value
+                const bookedSpots = (json.capacity ?? 0) - (json.spotsRemaining ?? 0)
+                setMinCapacity(bookedSpots)
 
                 // convert date into format compatible with datetime-local input
                 if (json.date) {
@@ -163,18 +170,21 @@ const EditClass = () => {
                     type="datetime-local"
                     onChange={(e) => setDate(e.target.value)}
                     value={date}
-                    className={emptyFields.includes('date') || invalidFields.includes('date') ? 'error' : ''}
+                    className={emptyFields.includes("date") || invalidFields.includes("date") ? "error" : ""}
                 />
                 <p className="field-help">Click the calendar icon to select the date and time.</p>
 
                 <label>Capacity:</label>
                 <input
                     type="number"
-                    min="0"
+                    min={minCapacity}
                     onChange={(e) => setCapacity(e.target.value)}
                     value={capacity}
                     className={emptyFields.includes("capacity") || invalidFields.includes("capacity") ? "error" : ""}
                 />
+                <p className="field-help">
+                    Capacity cannot be lower than {minCapacity}, because those places are already booked.
+                </p>
 
                 <label>Price:</label>
                 <div className="currency-input-wrapper">

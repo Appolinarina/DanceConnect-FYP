@@ -310,9 +310,34 @@ const updateClass = async (req, res) => {
         })
     }
 
+    // find existing class first so we can recalculate spots remaining correctly
+    const existingClass = await danceClass.findOne({
+        _id: id,
+        user_id: req.user._id
+    })
+
+    if (!existingClass) {
+        return res.status(404).json({ error: 'No such class' })
+    }
+
+    // work out how many places are already booked
+    const bookedSpots = existingClass.capacity - existingClass.spotsRemaining
+
+    // do not allow capacity to go below number of existing bookings
+    if (capacityNum < bookedSpots) {
+        return res.status(400).json({
+            error: `Capacity cannot be lower than ${bookedSpots}, because ${bookedSpots} place(s) are already booked`,
+            invalidFields: ['capacity']
+        })
+    }
+
+    // keep existing bookings the same, and adjust available spots around them
+    const newSpotsRemaining = capacityNum - bookedSpots
+
+
     const danceclass = await danceClass.findOneAndUpdate(
         { _id: id, user_id: req.user._id }, //only allow class creator to update class
-        { title, dance_style, dance_level, location, date, capacity: capacityNum, price: priceNum }, //update only these fields
+        { title, dance_style, dance_level, location, date, capacity: capacityNum, price: priceNum, spotsRemaining: newSpotsRemaining }, //update only these fields
         { new: true, runValidators: true } //validate new inputs so they follow the schema
     )
 
