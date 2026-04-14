@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react"
+import { buildApiUrl } from "../utils/api"
 
 export const useBrowseClasses = (user, myUpcoming) => {
     const [allClasses, setAllClasses] = useState([]) //store raw browse classes returned from backend
@@ -39,7 +40,7 @@ export const useBrowseClasses = (user, myUpcoming) => {
             params.append("sort", filters.sort)
         }
 
-        const url = `/api/danceclasses/browse?${params.toString()}`
+        const url = buildApiUrl(`/api/danceclasses/browse?${params.toString()}`)
 
         const response = await fetch(url)
         const json = await response.json()
