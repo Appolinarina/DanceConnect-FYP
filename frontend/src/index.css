@@ -256,37 +256,6 @@ form.signup {
   margin: 0;
 }
 
-/* class owner action buttons - edit and delete */
-.class-owner-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-/* edit button in stronger filled style */
-.edit-action-btn {
-  background: var(--secondary);
-  border: none;
-  color: #fffdf8;
-  box-shadow: 0 8px 20px rgba(185, 131, 47, 0.22);
-}
-
-.edit-action-btn:hover {
-  filter: brightness(1.03);
-}
-
-/* delete button in lighter style */
-.delete-action-btn {
-  background: #f3e8da;
-  border: 1px solid var(--border);
-  color: var(--primary);
-}
-
-.delete-action-btn:hover {
-  background: #ead9c4;
-}
-
 /* modal overlay */
 .modal-overlay {
   position: fixed;
@@ -361,24 +330,6 @@ form.signup {
 .unbook-confirm-btn:hover {
   filter: brightness(1.03);
   transform: translateY(-1px);
-}
-
-
-.owner-action-btn {
-  cursor: pointer;
-  background: #f3e8da;
-  border: 1px solid var(--border);
-  padding: 10px 16px;
-  border-radius: 999px;
-  color: var(--primary);
-  font-size: 0.86rem;
-  font-weight: 500;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.owner-action-btn:hover {
-  background: #ead9c4;
 }
 
 /* forms */
@@ -517,6 +468,91 @@ form button,
 form button:hover,
 .danceclass-details button:hover {
   padding: 12px 20px;
+}
+
+/* card footer */
+.danceclass-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.danceclass-footer p {
+  margin: 0;
+}
+
+/* owner action row */
+.class-owner-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+/* shared styles for card action buttons */
+.owner-action-btn,
+.card-action-btn {
+  min-height: 48px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+/* edit button now gold */
+.edit-action-btn {
+  background: var(--secondary);
+  border: none;
+  color: #fffdf8;
+  box-shadow: 0 8px 20px rgba(185, 131, 47, 0.22);
+}
+
+.edit-action-btn:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+/* delete button now light */
+.delete-action-btn {
+  background: #f3e8da;
+  border: 1px solid var(--border);
+  color: var(--primary);
+  box-shadow: none;
+}
+
+.delete-action-btn:hover {
+  background: #ead9c4;
+  transform: translateY(-1px);
+}
+
+/* browse booking button in footer */
+.book-action-btn {
+  background: var(--secondary);
+  border: none;
+  color: #fffdf8;
+  box-shadow: 0 8px 20px rgba(185, 131, 47, 0.22);
+  margin-left: auto;
+}
+
+.book-action-btn:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+/* upcoming unbook button in footer */
+.danceclass-footer .unbook-btn {
+  margin-left: auto;
 }
 
 /* form action buttons container */
@@ -822,10 +858,6 @@ div.error {
     font-size: 1.8rem;
   }
 
-  .danceclass-details button { 
-  padding: 16px 60px;
-  }
-
   /* auth forms on mobile - make wider card and inputs */
   .auth-page {
     min-height: auto;
@@ -862,17 +894,25 @@ div.error {
     margin-top: 16px;
   }
 
-  /* user class card - buttons underneath and modal*/
+  /* card footer on mobile */
   .danceclass-footer {
     align-items: flex-start;
   }
 
   .class-owner-actions {
+    margin-left: 0;
     justify-content: flex-start;
   }
 
-  .owner-action-btn {
+  .owner-action-btn,
+  .card-action-btn {
+    min-width: 150px;
     text-align: center;
+  }
+
+  .book-action-btn,
+  .danceclass-footer .unbook-btn {
+    margin-left: 0;
   }
 
   .delete-modal {
@@ -906,5 +946,19 @@ div.error {
     text-align: center;
     font-size: 0.95rem;
     line-height: 1.4;
+  }
+
+  /*filter buttons side by side*/
+  .filter-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .filter-actions button,
+  .filter-actions .clear-filters-btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
   }
 }

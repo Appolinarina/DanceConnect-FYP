@@ -93,29 +93,30 @@ const DanceClassDetails = ({
                             </button>
                         </div>
                     )}
+
+                    {/* if not owner, and booking is allowed - show book button */}
+                    {!isOwner && showBook && (
+                        <button
+                            type="button"
+                            className="card-action-btn book-action-btn"
+                            disabled={spotsRemaining <= 0}
+                            onClick={() => onBook && onBook(danceclass._id)}
+                        >
+                            {spotsRemaining <= 0 ? "Full" : "Book Class"}
+                        </button>
+                    )}
+
+                    {/* if this card is in upcoming bookings - show unbook button */}
+                    {!isOwner && showUnbook && (
+                        <button
+                            type="button"
+                            className="card-action-btn unbook-btn"
+                            onClick={() => setShowUnbookModal(true)}
+                        >
+                            Unbook Class
+                        </button>
+                    )}
                 </div>
-
-                {/* if not owner, and booking is allowed - show book button */}
-                {!isOwner && showBook && (
-                    <button
-                        type="button"
-                        disabled={spotsRemaining <= 0}
-                        onClick={() => onBook && onBook(danceclass._id)}
-                    >
-                        {spotsRemaining <= 0 ? "Full" : "Book Class"}
-                    </button>
-                )}
-
-                {/* if this card is in upcoming bookings - show unbook button */}
-                {!isOwner && showUnbook && (
-                    <button
-                        type="button"
-                        className="unbook-btn"
-                        onClick={() => setShowUnbookModal(true)}
-                    >
-                        Unbook Class
-                    </button>
-                )}
             </div>
 
             {/* custom delete confirmation modal */}
