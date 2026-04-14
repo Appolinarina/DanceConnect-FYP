@@ -15,6 +15,7 @@ const Browse = () => {
 
   // Filter UI state (with Apply button)
   const [showFilters, setShowFilters] = useState(false)
+  const [showUpcomingClasses, setShowUpcomingClasses] = useState(false) //mobile only toggle for upcoming classes
 
   //search bar UI state
   const [searchTerm, setSearchTerm] = useState("")
@@ -168,6 +169,42 @@ const Browse = () => {
             Search available classes and refine the results using filters.
           </p>
 
+          {/* mobile only upcoming classes toggle */}
+          <div className="mobile-upcoming-classes">
+            <button
+              type="button"
+              className="filter-toggle"
+              onClick={() => setShowUpcomingClasses(!showUpcomingClasses)}
+            >
+              {showUpcomingClasses ? "Hide Upcoming Classes" : "My Upcoming Classes"}
+            </button>
+
+            {showUpcomingClasses && (
+              <div className="mobile-upcoming-panel">
+                {!user && (
+                  <div className="empty-state">
+                    Please log in to view your upcoming classes.
+                  </div>
+                )}
+
+                {user && myUpcoming.length === 0 && (
+                  <div className="empty-state">No classes booked so far</div>
+                )}
+
+                {user &&
+                  myUpcoming.map((danceclass) => (
+                    <DanceClassDetails
+                      key={danceclass._id}
+                      danceclass={danceclass}
+                      showBook={false}
+                      showUnbook={true}
+                      onUnbook={handleUnbook}
+                    />
+                  ))}
+              </div>
+            )}
+          </div>
+
           {error && <div className="error">{error}</div>}
 
           {/* Browse Filters Component */}
@@ -210,7 +247,7 @@ const Browse = () => {
       </div>
 
       {/* RIGHT COLUMN */}
-      <div className="sidebar-panel">
+      <div className="sidebar-panel browse-upcoming-sidebar">
         <h3>My Upcoming Classes</h3>
 
         {!user && (
@@ -223,7 +260,7 @@ const Browse = () => {
           <div className="empty-state">No upcoming bookings yet.</div>
         )}
 
-         {user &&
+        {user &&
           myUpcoming.map((danceclass) => (
             <DanceClassDetails
               key={danceclass._id}

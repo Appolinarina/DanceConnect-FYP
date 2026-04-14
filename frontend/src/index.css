@@ -7,6 +7,7 @@
   --surface-2: #f8f0e2;
   --primary: #4f3d24;
   --secondary: #b9832f;
+  --tertiary:#896635;
   --accent: #7e9470;
   --accent-soft: #e3ebdc;
   --text: #2f2a24;
@@ -207,6 +208,15 @@ form.signup {
   margin-bottom: 18px;
   color: var(--text-soft);
   font-size: 0.96rem;
+}
+
+/* mobile only upcoming classes toggle on browse page */
+.mobile-upcoming-classes {
+  display: none;
+}
+
+.mobile-upcoming-panel {
+  margin-bottom: 18px;
 }
 
 /* cards */
@@ -510,9 +520,9 @@ form button:hover,
   white-space: nowrap;
 }
 
-/* edit button now gold */
+/* edit button */
 .edit-action-btn {
-  background: var(--secondary);
+  background: var(--tertiary);
   border: none;
   color: #fffdf8;
   box-shadow: 0 8px 20px rgba(185, 131, 47, 0.22);
@@ -523,16 +533,16 @@ form button:hover,
   transform: translateY(-1px);
 }
 
-/* delete button now light */
+/* delete button */
 .delete-action-btn {
-  background: #f3e8da;
-  border: 1px solid var(--border);
-  color: var(--primary);
+  background: transparent;
+  background: var(--secondary);
+  border: 1.5px solid var(--border);
   box-shadow: none;
 }
 
 .delete-action-btn:hover {
-  background: #ead9c4;
+  filter: brightness(1.03);
   transform: translateY(-1px);
 }
 
@@ -960,5 +970,18 @@ div.error {
     width: 100%;
     justify-content: center;
     text-align: center;
+  }
+
+  /*upcoming classes section*/
+  .mobile-upcoming-classes {
+    display: block;
+  }
+
+  .browse-upcoming-sidebar {
+    display: none;
+  }
+
+  .mobile-upcoming-panel {
+    margin-top: 16px;
   }
 }
