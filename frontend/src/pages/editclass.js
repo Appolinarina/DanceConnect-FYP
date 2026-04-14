@@ -61,7 +61,7 @@ const EditClass = () => {
         if (user) {
             fetchClass()
         }
-    }, [id, user, logout])
+    }, [id, user]) //only refetch if class id or logged in user changes
 
     // handle form submission (update class)
     const handleSubmit = async (e) => {
