@@ -245,11 +245,96 @@ form.signup {
 
 /* class owner action buttons - edit and delete */
 .class-owner-actions {
-  position: absolute;
-  top: 18px;
-  right: 18px;
   display: flex;
+  justify-content: flex-end;
   gap: 12px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.owner-action-btn {
+  cursor: pointer;
+  background: #f3e8da;
+  border: 1px solid var(--border);
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: var(--primary);
+  font-size: 0.86rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.owner-action-btn:hover {
+  background: #ead9c4;
+}
+
+/* warning style delete button */
+.delete-action-btn {
+  background: #fff3f4;
+  border: 1px solid #efc2c8;
+  color: #b3404d;
+}
+
+.delete-action-btn:hover {
+  background: #fde7ea;
+}
+
+/* modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(47, 42, 36, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 2000;
+}
+
+/* delete confirmation modal */
+.delete-modal {
+  width: min(100%, 560px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 28px;
+}
+
+.delete-modal h3 {
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+  line-height: 1.3;
+}
+
+.delete-modal p {
+  margin-bottom: 24px;
+}
+
+.delete-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* delete button inside modal */
+.delete-confirm-btn {
+  background: #d9414e;
+  border: none;
+  color: #fffdf8;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.delete-confirm-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
 }
 
 .owner-action-btn {
@@ -750,12 +835,35 @@ div.error {
     margin-top: 16px;
   }
 
-  /* make create class form a bit wider on mobile */
-  .create {
-    width: 90%;
-    max-width: 420px;
-    margin-left: auto;
-    margin-right: auto;
+  /* user class card - buttons underneath and modal*/
+  .class-owner-actions {
+    justify-content: flex-start;
+  }
+
+  .owner-action-btn {
+    flex: 1 1 140px;
+    text-align: center;
+  }
+
+  .delete-modal {
+    padding: 22px;
+  }
+
+  .delete-modal-actions {
+    justify-content: stretch;
+  }
+
+  .delete-modal-actions .secondary-btn,
+  .delete-modal-actions .delete-confirm-btn {
+    flex: 1 1 140px;
+    text-align: center;
+  }
+
+  /* make create class form wider on mobile */
+  .mobile-create-class .create {
+    width: 100%;
+    max-width: none;
+    margin: 16px 0 0;
     padding: 24px;
   }
 

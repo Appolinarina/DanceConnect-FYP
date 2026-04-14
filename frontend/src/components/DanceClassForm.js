@@ -68,7 +68,7 @@ const DanceClassForm = ({ onSuccess }) => {
             setInvalidFields([])
             console.log('New Dance Class Created', json)
             dispatch({ type: 'CREATE_DANCECLASS', payload: json }) //dispatch only if response is ok, to update context state
-            showToast("Your class has been successfully created") //show popup
+            showToast("Your class has been created") //show popup
 
             if (onSuccess) {
                 onSuccess() //close mobile form after successful class creation

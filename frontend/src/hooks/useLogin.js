@@ -38,7 +38,7 @@ export const useLogin = () => {
             dispatch({ type: 'LOGIN', payload: json })
 
             // show popup
-            showToast("You have successfully logged in")
+            showToast("You are now logged in")
 
             setIsLoading(false)
         }

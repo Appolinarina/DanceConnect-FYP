@@ -19,7 +19,7 @@ export const useLogout = () => {
         dispatch({type: 'LOGOUT'}) //no payload needed to logout (just sets user to null in AuthContext.js line 9)
 
         // show popup
-        showToast("You have successfully logged out")
+        showToast("You are now logged out")
 
         danceclassDispatch({type: 'SET_DANCECLASSES', payload: null}) //when user log out, set danceclasses to null to remove the user class list from UI
     }
