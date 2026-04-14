@@ -658,6 +658,7 @@ div.error {
 
 /* responsive */
 @media (max-width: 980px) {
+  
   .home {
     grid-template-columns: 1fr;
   }
@@ -703,4 +704,28 @@ div.error {
   .danceclass-details button { 
   padding: 16px 60px;
   }
+
+  /* auth forms on mobile */
+  .auth-page {
+    min-height: auto;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    align-items: flex-start;
+  }
+
+  form.login,
+  form.signup {
+    width: 90%;
+    max-width: 420px;
+    margin: 24px auto;
+    padding: 24px;
+  }
+
+  form.login button,
+  form.signup button {
+    display: block;
+    min-width: 180px;
+    margin: 24px auto 0;
+  }
+
 }
