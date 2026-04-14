@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDanceClassesContext } from "../hooks/useDanceClassContext"
 import { useAuthContext } from "../hooks/useAuthContext"
 import { useLogout } from "../hooks/useLogout"
@@ -12,6 +12,7 @@ const Home = () => {
     const { danceclasses, dispatch } = useDanceClassesContext() // danceclasses null initially, updates with dispatch
     const { user, authIsReady } = useAuthContext()
     const { logout } = useLogout()
+    const [showCreateForm, setShowCreateForm] = useState(false) //mobile only toggle for create class form
 
     useEffect(() => {
         // wait until auth is checked (prevent class fetch until user confirmed)
@@ -38,7 +39,7 @@ const Home = () => {
         if (user) {
             fetchDanceClasses()
         }
-    }, [dispatch, user, authIsReady]) //rerun when user/auth state changes
+    }, [dispatch, user, authIsReady]) //rerun when user or auth check state changes
 
     return (
         <div className="home">
@@ -48,9 +49,24 @@ const Home = () => {
                     Manage the classes you have created.
                 </p>
 
+                {/* mobile only button to show/hide create class form */}
+                <div className="mobile-create-class">
+                    <button
+                        type="button"
+                        className="filter-toggle"
+                        onClick={() => setShowCreateForm(!showCreateForm)}
+                    >
+                        {showCreateForm ? "Hide Form" : "Add New Class"}
+                    </button>
+
+                    {showCreateForm && (
+                        <DanceClassForm onSuccess={() => setShowCreateForm(false)} />
+                    )}
+                </div>
+
                 {danceclasses && danceclasses.length === 0 && (
                     <div className="empty-state">
-                        You have not created any classes yet. Use the form on the right to add your first class.
+                        You have not created any classes yet. Use the create class form to add your first class.
                     </div>
                 )}
 
@@ -58,7 +74,11 @@ const Home = () => {
                     <DanceClassDetails key={danceclass._id} danceclass={danceclass} />
                 ))}
             </div>
-            <DanceClassForm />
+
+            {/* desktop only create class form */}
+            <div className="desktop-create-class">
+                <DanceClassForm />
+            </div>
         </div>
     )
 }

@@ -5,7 +5,7 @@ import { useLogout } from "../hooks/useLogout"
 import { useToast } from "../hooks/useToast"
 import { authFetch } from "../utils/authFetch"
 
-const DanceClassForm = () => {
+const DanceClassForm = ({ onSuccess }) => {
     const { dispatch } = useDanceClassesContext()
     const { user } = useAuthContext()
     const { logout } = useLogout()
@@ -69,6 +69,10 @@ const DanceClassForm = () => {
             console.log('New Dance Class Created', json)
             dispatch({ type: 'CREATE_DANCECLASS', payload: json }) //dispatch only if response is ok, to update context state
             showToast("Your class has been successfully created") //show popup
+
+            if (onSuccess) {
+                onSuccess() //close mobile form after successful class creation
+            }
         }
     }
 

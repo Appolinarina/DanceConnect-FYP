@@ -656,6 +656,15 @@ div.error {
   color: var(--text-soft);
 }
 
+/* create class visibility wrappers */
+.mobile-create-class {
+  display: none;
+}
+
+.desktop-create-class {
+  display: block;
+}
+
 /* responsive */
 @media (max-width: 980px) {
   
@@ -726,6 +735,19 @@ div.error {
     display: block;
     min-width: 180px;
     margin: 24px auto 0;
+  }
+
+  .mobile-create-class {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .desktop-create-class {
+    display: none;
+  }
+
+  .mobile-create-class .create {
+    margin-top: 16px;
   }
 
 }
