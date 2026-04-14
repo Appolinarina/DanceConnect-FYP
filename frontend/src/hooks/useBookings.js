@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom"
 import { authFetch } from "../utils/authFetch"
+import { useToast } from "../hooks/useToast"
 
 export const useBookings = (user, logout, fetchMyUpcoming, fetchBrowseClasses, appliedFilters, appliedSearchTerm, setError) => {
     const navigate = useNavigate()
+    const { showToast } = useToast()
 
     // handle booking a class
     const handleBook = async (classId) => {
@@ -26,6 +28,7 @@ export const useBookings = (user, logout, fetchMyUpcoming, fetchBrowseClasses, a
         }
 
         setError(null)
+        showToast("Class booked")
 
         // refresh upcoming bookings (right column)
         await fetchMyUpcoming()
@@ -59,6 +62,7 @@ export const useBookings = (user, logout, fetchMyUpcoming, fetchBrowseClasses, a
         }
 
         setError(null)
+        showToast("Class unbooked")
 
         // refresh upcoming bookings
         await fetchMyUpcoming()

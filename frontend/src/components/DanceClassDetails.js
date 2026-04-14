@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useDanceClassesContext } from "../hooks/useDanceClassContext"
 import { useAuthContext } from "../hooks/useAuthContext"
 import { useLogout } from "../hooks/useLogout"
+import { useToast } from "../hooks/useToast"
 import { authFetch } from "../utils/authFetch"
 import { Link } from "react-router-dom"
 
@@ -19,7 +20,9 @@ const DanceClassDetails = ({
     const { dispatch } = useDanceClassesContext()
     const { user } = useAuthContext()
     const { logout } = useLogout()
+    const { showToast } = useToast()
     const [showDeleteModal, setShowDeleteModal] = useState(false) //delete confirmation modal
+    const [showUnbookModal, setShowUnbookModal] = useState(false) //unbook confirmation modal
 
     // if logged in user is class owner
     const isOwner = user && danceclass.user_id && danceclass.user_id.toString() === user._id.toString()
@@ -44,9 +47,19 @@ const DanceClassDetails = ({
         if (response.ok) {
             dispatch({ type: "DELETE_DANCECLASS", payload: json }) //remove deleted class from global state so UI updates straight away
             setShowDeleteModal(false) //close modal after successful delete
+            showToast("Your class has been deleted")
         } else {
             console.log(json.error) //log backend error if delete failed
         }
+    }
+
+    const handleConfirmUnbook = async () => {
+        if (!onUnbook) {
+            return
+        }
+
+        await onUnbook(danceclass._id)
+        setShowUnbookModal(false) //close modal after unbooking
     }
 
     return (
@@ -62,23 +75,25 @@ const DanceClassDetails = ({
                 <p><strong>Spaces left: </strong>{spotsRemaining}</p>
                 <p><strong>Price: </strong>{danceclass.price}</p>
 
-                <p>{formatDistanceToNow(new Date(danceclass.createdAt), { addSuffix: true })} </p>
+                <div className="danceclass-footer">
+                    <p>{formatDistanceToNow(new Date(danceclass.createdAt), { addSuffix: true })}</p>
 
-                {/* if the user owns the class - show edit/delete buttons */}
-                {isOwner && (
-                    <div className="class-owner-actions">
-                        <Link to={`/classes/${danceclass._id}/edit`} className="owner-action-btn">
-                            Edit Class
-                        </Link>
-                        <button
-                            type="button"
-                            className="owner-action-btn delete-action-btn"
-                            onClick={() => setShowDeleteModal(true)}
-                        > 
-                            Delete Class
-                        </button>
-                    </div>
-                )}
+                    {/* if the user owns the class - show edit/delete buttons */}
+                    {isOwner && (
+                        <div className="class-owner-actions">
+                            <Link to={`/classes/${danceclass._id}/edit`} className="owner-action-btn edit-action-btn">
+                                Edit Class
+                            </Link>
+                            <button
+                                type="button"
+                                className="owner-action-btn delete-action-btn"
+                                onClick={() => setShowDeleteModal(true)}
+                            >
+                                Delete Class
+                            </button>
+                        </div>
+                    )}
+                </div>
 
                 {/* if not owner, and booking is allowed - show book button */}
                 {!isOwner && showBook && (
@@ -96,7 +111,7 @@ const DanceClassDetails = ({
                     <button
                         type="button"
                         className="unbook-btn"
-                        onClick={() => onUnbook && onUnbook(danceclass._id)}
+                        onClick={() => setShowUnbookModal(true)}
                     >
                         Unbook Class
                     </button>
@@ -125,6 +140,34 @@ const DanceClassDetails = ({
                                 onClick={handleDelete}
                             >
                                 Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* custom unbook confirmation modal */}
+            {showUnbookModal && (
+                <div className="modal-overlay" onClick={() => setShowUnbookModal(false)}>
+                    <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+                        <h3>Unbook Class: "{danceclass.title}"</h3>
+                        <p>Are you sure you want to unbook this class?</p>
+
+                        <div className="delete-modal-actions">
+                            <button
+                                type="button"
+                                className="secondary-btn"
+                                onClick={() => setShowUnbookModal(false)}
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="button"
+                                className="unbook-confirm-btn"
+                                onClick={handleConfirmUnbook}
+                            >
+                                Unbook
                             </button>
                         </div>
                     </div>

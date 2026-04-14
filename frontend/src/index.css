@@ -12,7 +12,7 @@
   --text: #2f2a24;
   --text-soft: #6a6257;
   --border: #e5d9c7;
-  --error: #c84b5a;
+  --error: #c25843;
   --shadow-sm: 0 6px 18px rgba(79, 61, 36, 0.06);
   --shadow-md: 0 14px 32px rgba(79, 61, 36, 0.10);
   --radius-sm: 10px;
@@ -243,41 +243,48 @@ form.signup {
   color: var(--primary);
 }
 
+.danceclass-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.danceclass-footer p {
+  margin: 0;
+}
+
 /* class owner action buttons - edit and delete */
 .class-owner-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 18px;
   flex-wrap: wrap;
 }
 
-.owner-action-btn {
-  cursor: pointer;
+/* edit button in stronger filled style */
+.edit-action-btn {
+  background: var(--secondary);
+  border: none;
+  color: #fffdf8;
+  box-shadow: 0 8px 20px rgba(185, 131, 47, 0.22);
+}
+
+.edit-action-btn:hover {
+  filter: brightness(1.03);
+}
+
+/* delete button in lighter style */
+.delete-action-btn {
   background: #f3e8da;
   border: 1px solid var(--border);
-  padding: 10px 16px;
-  border-radius: 999px;
   color: var(--primary);
-  font-size: 0.86rem;
-  font-weight: 500;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.owner-action-btn:hover {
-  background: #ead9c4;
-}
-
-/* warning style delete button */
-.delete-action-btn {
-  background: #fff3f4;
-  border: 1px solid #efc2c8;
-  color: #b3404d;
 }
 
 .delete-action-btn:hover {
-  background: #fde7ea;
+  background: #ead9c4;
 }
 
 /* modal overlay */
@@ -321,7 +328,7 @@ form.signup {
 
 /* delete button inside modal */
 .delete-confirm-btn {
-  background: #d9414e;
+  background: var(--error);
   border: none;
   color: #fffdf8;
   padding: 12px 18px;
@@ -336,6 +343,26 @@ form.signup {
   filter: brightness(1.05);
   transform: translateY(-1px);
 }
+
+/* unbook button inside modal */
+.unbook-confirm-btn {
+  background: var(--secondary);
+  border: none;
+  color: #fffdf8;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(185, 131, 47, 0.22);
+  transition: 0.2s ease;
+}
+
+.unbook-confirm-btn:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
 
 .owner-action-btn {
   cursor: pointer;
@@ -836,12 +863,15 @@ div.error {
   }
 
   /* user class card - buttons underneath and modal*/
+  .danceclass-footer {
+    align-items: flex-start;
+  }
+
   .class-owner-actions {
     justify-content: flex-start;
   }
 
   .owner-action-btn {
-    flex: 1 1 140px;
     text-align: center;
   }
 
@@ -854,7 +884,8 @@ div.error {
   }
 
   .delete-modal-actions .secondary-btn,
-  .delete-modal-actions .delete-confirm-btn {
+  .delete-modal-actions .delete-confirm-btn,
+  .delete-modal-actions .unbook-confirm-btn {
     flex: 1 1 140px;
     text-align: center;
   }
@@ -876,5 +907,4 @@ div.error {
     font-size: 0.95rem;
     line-height: 1.4;
   }
-
 }
