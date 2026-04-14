@@ -110,16 +110,13 @@ const MyProfile = () => {
     setIsSaving(true)
     setProfileError(null)
 
-    const response = await authFetch(
-      "/api/user/me",
+    const response = await authFetch("/api/user/me",
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, aboutMe }),
-      },
-      user,
-      logout
-    )
+      }, 
+      user, logout)
 
     if (!response) {
       setIsSaving(false)

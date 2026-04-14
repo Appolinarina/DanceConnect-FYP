@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useAuthContext } from "../hooks/useAuthContext"
+import { useLogout } from "../hooks/useLogout"
 import { authFetch } from "../utils/authFetch"
 
 const EditClass = () => {
     const { id } = useParams() // get class id from URL
     const navigate = useNavigate() // used to redirect after saving
     const { user } = useAuthContext() // get logged in user
+    const { logout } = useLogout()
 
     // form state (pre-filled with existing class data)
     const [title, setTitle] = useState("")
@@ -25,7 +27,7 @@ const EditClass = () => {
     // fetch class data when page loads
     useEffect(() => {
         const fetchClass = async () => {
-            const response = await authFetch(`/api/danceclasses/${id}`, {}, user)
+            const response = await authFetch(`/api/danceclasses/${id}`, {}, user, logout)
 
             if (!response) {
                 return
@@ -59,7 +61,7 @@ const EditClass = () => {
         if (user) {
             fetchClass()
         }
-    }, [id, user])
+    }, [id, user, logout])
 
     // handle form submission (update class)
     const handleSubmit = async (e) => {
@@ -80,7 +82,7 @@ const EditClass = () => {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedClass)
-        }, user)
+        }, user, logout)
 
         if (!response) {
             return

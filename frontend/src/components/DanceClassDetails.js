@@ -1,5 +1,7 @@
 import { useDanceClassesContext } from "../hooks/useDanceClassContext"
 import { useAuthContext } from "../hooks/useAuthContext"
+import { useLogout } from "../hooks/useLogout"
+import { authFetch } from "../utils/authFetch"
 import { Link } from "react-router-dom"
 
 //date fns
@@ -14,32 +16,33 @@ const DanceClassDetails = ({
     showUnbook = false
 }) => {
     const { dispatch } = useDanceClassesContext()
-    const {user} = useAuthContext()
+    const { user } = useAuthContext()
+    const { logout } = useLogout()
 
     // if logged in user is class owner
-    const isOwner = user && danceclass.user_id && danceclass.user_id.toString() === user._id.toString() //check if user exists, then if class exists, then compare the 2 with user id
+    const isOwner = user && danceclass.user_id && danceclass.user_id.toString() === user._id.toString()
 
     // spaces left stored on the class document (decreases when users book)
     const spotsRemaining = danceclass.spotsRemaining
 
     const handleDelete = async () => {
         if (!user) {
-            return
+            return //stop if no logged in user
         }
 
-        const response = await fetch("/api/danceclasses/" + danceclass._id, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${user.token}`,
-            },
-        })
+        //send protected delete request for this class
+        const response = await authFetch("/api/danceclasses/" + danceclass._id, { method: "DELETE" }, user, logout)
 
-        const json = await response.json()
+        if (!response) {
+            return //stop if authFetch logs user out after 401
+        }
+
+        const json = await response.json() //read backend response
 
         if (response.ok) {
-            dispatch({ type: "DELETE_DANCECLASS", payload: json })
+            dispatch({ type: "DELETE_DANCECLASS", payload: json }) //remove deleted class from global state so UI updates straight away
         } else {
-            console.log(json.error)
+            console.log(json.error) //log backend error if delete failed
         }
     }
 
@@ -55,7 +58,7 @@ const DanceClassDetails = ({
             <p><strong>Spaces left: </strong>{spotsRemaining}</p>
             <p><strong>Price: </strong>{danceclass.price}</p>
 
-            <p>{formatDistanceToNow(new Date(danceclass.createdAt), {addSuffix: true})} </p>
+            <p>{formatDistanceToNow(new Date(danceclass.createdAt), { addSuffix: true })} </p>
 
             {/* if the user owns the class - show edit/delete buttons */}
             {isOwner && (
