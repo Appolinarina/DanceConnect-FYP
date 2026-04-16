@@ -10,6 +10,7 @@ import Navbar from './components/Navbar'
 import Browse from './pages/browse'
 import EditClass from './pages/editclass'
 import MyProfile from './pages/myprofile'
+import Footer from './components/Footer'
 
 function App() {
   const {user, authIsReady} = useAuthContext()
@@ -55,6 +56,7 @@ function App() {
           />
         </Routes>
       </div>
+      <Footer />
       <Toast />
       </BrowserRouter>
     </div>
