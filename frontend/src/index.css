@@ -97,11 +97,18 @@ nav a:hover {
   color: var(--secondary);
 }
 
+nav a.active {
+  color: var(--tertiary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .nav-links,
 .nav-user {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .nav-user span {
@@ -512,19 +519,14 @@ select.error {
   color: var(--text-soft);
 }
 
-/* navbar email link */
-.nav-user-link {
+/* navbar email pill */
+.nav-user-email {
   background: var(--surface-2);
   border: 1px solid var(--border);
   color: var(--primary);
   padding: 8px 12px;
   border-radius: 999px;
   font-size: 0.9rem;
-  text-decoration: none;
-}
-
-.nav-user-link:hover {
-  color: var(--secondary);
 }
 
 /* buttons */
@@ -867,6 +869,10 @@ div.error {
 }
 
 /* create class visibility wrappers */
+.mobile-create-class {
+  display: none;
+}
+
 .desktop-create-class {
   display: block;
 }

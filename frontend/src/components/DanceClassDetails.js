@@ -76,7 +76,7 @@ const DanceClassDetails = ({
                 <p><strong>Price: </strong>€{Number(danceclass.price).toFixed(2)}</p>
 
                 <div className="danceclass-footer">
-                    <p>{formatDistanceToNow(new Date(danceclass.createdAt), { addSuffix: true })}</p>
+                    <p>Class posted {formatDistanceToNow(new Date(danceclass.createdAt), { addSuffix: true })}</p>
 
                     {/* if the user owns the class - show edit/delete buttons */}
                     {isOwner && (
