@@ -312,6 +312,7 @@ form.signup {
   color: var(--primary);
 }
 
+/* card footer */
 .danceclass-footer {
   display: flex;
   justify-content: space-between;
@@ -546,20 +547,6 @@ form button:hover,
   padding: 12px 20px;
 }
 
-/* card footer */
-.danceclass-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-  margin-top: 18px;
-  flex-wrap: wrap;
-}
-
-.danceclass-footer p {
-  margin: 0;
-}
-
 /* owner action row */
 .class-owner-actions {
   display: flex;
@@ -601,7 +588,6 @@ form button:hover,
 
 /* delete button */
 .delete-action-btn {
-  background: transparent;
   background: var(--secondary);
   border: 1.5px solid var(--border);
   box-shadow: none;
@@ -881,10 +867,6 @@ div.error {
 }
 
 /* create class visibility wrappers */
-.mobile-create-class {
-  display: none;
-}
-
 .desktop-create-class {
   display: block;
 }
