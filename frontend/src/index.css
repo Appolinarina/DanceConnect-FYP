@@ -219,6 +219,45 @@ form.signup {
   margin-bottom: 18px;
 }
 
+/* mobile upcoming classes highlight block */
+.mobile-upcoming-highlight {
+  display: none;
+}
+
+.mobile-upcoming-kicker {
+  margin: 0 0 6px;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mobile-upcoming-text {
+  margin: 0 0 14px;
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
+.mobile-upcoming-toggle {
+  background: var(--secondary);
+  border: none;
+  color: #fffdf8;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(185, 131, 47, 0.22);
+  transition: 0.2s ease;
+  width: 100%;
+}
+
+.mobile-upcoming-toggle:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
 /* cards */
 .danceclass-details {
   background: var(--surface);
@@ -307,7 +346,7 @@ form.signup {
 
 /* delete button inside modal */
 .delete-confirm-btn {
-  background: var(--error);
+  background: var(--primary);
   border: none;
   color: #fffdf8;
   padding: 12px 18px;
@@ -362,6 +401,13 @@ form.signup {
   font-size: 1.55rem;
   margin-bottom: 22px;
   color: var(--primary);
+}
+
+.field-help {
+  margin-top: -10px;
+  margin-bottom: 18px;
+  font-size: 0.88rem;
+  color: var(--text-soft);
 }
 
 /* labels and inputs */
@@ -688,7 +734,7 @@ div.error {
 }
 
 .browse-search-btn {
-  background: var(--secondary);
+  background: var(--tertiary);
   border: none;
   color: #fffdf8;
   padding: 12px 18px;
@@ -983,5 +1029,20 @@ div.error {
 
   .mobile-upcoming-panel {
     margin-top: 16px;
+  }
+
+  .mobile-upcoming-highlight {
+    display: block;
+    background: rgba(255, 248, 237, 0.9);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* dont show date/time input help text on mobile*/
+  .field-help {
+    display: none;
   }
 }

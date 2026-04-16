@@ -150,6 +150,13 @@ const Browse = () => {
     })
   }
 
+  // mobile dropdown button text for upcoming classes
+  const upcomingButtonText = showUpcomingClasses
+    ? "Hide Upcoming Classes" //if upcoming section is open, button should hide it
+    : user
+      ? `My Upcoming Classes (${myUpcoming.length})` //if user is logged in, show booking count
+      : "My Upcoming Classes" //if no user, show button text without count
+
   return (
     <div className="home">
       {/* LEFT COLUMN */}
@@ -169,15 +176,19 @@ const Browse = () => {
             Search available classes and refine the results using filters.
           </p>
 
-          {/* mobile only upcoming classes toggle */}
+                    {/* mobile only upcoming classes toggle */}
           <div className="mobile-upcoming-classes">
-            <button
-              type="button"
-              className="filter-toggle"
-              onClick={() => setShowUpcomingClasses(!showUpcomingClasses)}
-            >
-              {showUpcomingClasses ? "Hide Upcoming Classes" : "My Upcoming Classes"}
-            </button>
+            <div className="mobile-upcoming-highlight">
+              <p className="mobile-upcoming-kicker">Already booked a class?</p>
+              <p className="mobile-upcoming-text">
+                View the classes you have coming up.
+              </p>
+
+              <button
+                type="button"
+                className="mobile-upcoming-toggle"
+                onClick={() => setShowUpcomingClasses(!showUpcomingClasses)}> {upcomingButtonText} </button>
+            </div>
 
             {showUpcomingClasses && (
               <div className="mobile-upcoming-panel">

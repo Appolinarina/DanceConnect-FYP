@@ -117,13 +117,14 @@ const DanceClassForm = ({ onSuccess }) => {
                 className={emptyFields.includes('location') ? 'error' : ''}
             />
 
-            <label>Date:</label>
+            <label>Date and Time:</label>
             <input
                 type="datetime-local"
                 onChange={(e) => setDate(e.target.value)}
                 value={date}
                 className={emptyFields.includes('date') ? 'error' : ''}
             />
+            <p className="field-help">Click the calendar icon to select the date and time.</p>
 
             <label>Capacity:</label>
             <input

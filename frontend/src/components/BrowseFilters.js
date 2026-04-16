@@ -27,7 +27,7 @@ const BrowseFilters = ({
                     <input
                         id="browse-search"
                         type="text"
-                        placeholder="Search by class name, style, or location"
+                        placeholder="Search by title, style or location"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         onKeyDown={handleSearchKeyDown} //pressing enter applies search only
