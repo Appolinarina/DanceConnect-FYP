@@ -198,6 +198,26 @@ form.signup {
   top: 105px;
 }
 
+.browse-upcoming-sidebar {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 125px);
+}
+
+.browse-upcoming-header {
+  flex-shrink: 0;
+  margin-bottom: 6px;
+}
+
+.browse-upcoming-header h3 {
+  margin-bottom: 0;
+}
+
+.browse-upcoming-list {
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
 .section-title {
   margin-bottom: 6px;
   font-size: 1.75rem;

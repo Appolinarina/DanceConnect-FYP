@@ -259,28 +259,32 @@ const Browse = () => {
 
       {/* RIGHT COLUMN */}
       <div className="sidebar-panel browse-upcoming-sidebar">
-        <h3>My Upcoming Classes</h3>
+        <div className="browse-upcoming-header">
+          <h3>My Upcoming Classes</h3>
+        </div>
 
-        {!user && (
-          <div className="empty-state">
-            Please log in to view your upcoming classes.
-          </div>
-        )}
+        <div className="browse-upcoming-list">
+          {!user && (
+            <div className="empty-state">
+              Please log in to view your upcoming classes.
+            </div>
+          )}
 
-        {user && myUpcoming.length === 0 && (
-          <div className="empty-state">No upcoming bookings yet.</div>
-        )}
+          {user && myUpcoming.length === 0 && (
+            <div className="empty-state">No upcoming bookings yet.</div>
+          )}
 
-        {user &&
-          myUpcoming.map((danceclass) => (
-            <DanceClassDetails
-              key={danceclass._id}
-              danceclass={danceclass}
-              showBook={false}
-              showUnbook={true}
-              onUnbook={handleUnbook}
-            />
-          ))}
+          {user &&
+            myUpcoming.map((danceclass) => (
+              <DanceClassDetails
+                key={danceclass._id}
+                danceclass={danceclass}
+                showBook={false}
+                showUnbook={true}
+                onUnbook={handleUnbook}
+              />
+            ))}
+        </div>
       </div>
     </div>
   )
