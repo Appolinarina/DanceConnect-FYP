@@ -10,7 +10,15 @@ export const useBookings = (user, logout, fetchMyUpcoming, fetchBrowseClasses, a
     const handleBook = async (classId) => {
         // redirect to login if not authenticated
         if (!user) {
-            navigate("/login")
+            showToast("Login to book a class")
+            navigate("/login", {
+                state: {
+                    redirectAfterLogin: {
+                        type: "book-class", //remember what action user was trying to do
+                        classId //store class id so we can book it after login
+                    }
+                }
+            })
             return
         }
 

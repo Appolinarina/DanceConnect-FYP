@@ -170,7 +170,24 @@ const createClass = async (req, res) => {
         invalidFields.push('price')
     }
 
+    // validate date is not in the past
+    // later today is allowed, but any time before now is not
+    const classDate = new Date(date)
+
+    if (Number.isNaN(classDate.getTime()) || classDate < new Date()) {
+        invalidFields.push('date')
+    }
+
     if (invalidFields.length > 0) {
+        // if date is invalid, show date-specific error
+        if (invalidFields.includes('date')) {
+            return res.status(400).json({
+                error: 'Class date cannot be in the past',
+                invalidFields
+            })
+        }
+
+        // otherwise show number validation error
         return res.status(400).json({
             error: 'Capacity or price cannot be negative',
             invalidFields
@@ -178,14 +195,24 @@ const createClass = async (req, res) => {
     }
 
     //add doc to db
-        try {
-            const user_id = req.user._id
-            const spotsRemaining = capacityNum
-            const danceclass = await danceClass.create({title, dance_style, dance_level, location, date, capacity: capacityNum, price: priceNum, user_id, spotsRemaining})
-            res.status(200).json(danceclass)
-        } catch (error){
-            res.status(400).json({error: error.message})
-        }
+    try {
+        const user_id = req.user._id
+        const spotsRemaining = capacityNum
+        const danceclass = await danceClass.create({
+            title,
+            dance_style,
+            dance_level,
+            location,
+            date,
+            capacity: capacityNum,
+            price: priceNum,
+            user_id,
+            spotsRemaining
+        })
+        res.status(200).json(danceclass)
+    } catch (error){
+        res.status(400).json({error: error.message})
+    }
 }
 
 //delete a class
@@ -234,7 +261,7 @@ const updateClass = async (req, res) => {
     if (!date) {
         emptyFields.push('date')
     }
-    if (price === undefined || price === null || price === '') {
+    if (capacity === undefined || capacity === null || capacity === '') {
         emptyFields.push('capacity')
     }
     if (price === undefined || price === null || price === '') {
@@ -259,7 +286,24 @@ const updateClass = async (req, res) => {
         invalidFields.push('price')
     }
 
+    // validate date is not in the past
+    // later today is allowed, but any time before now is not
+    const classDate = new Date(date)
+
+    if (Number.isNaN(classDate.getTime()) || classDate < new Date()) {
+        invalidFields.push('date')
+    }
+
     if (invalidFields.length > 0) {
+        // if date is invalid, show date-specific error
+        if (invalidFields.includes('date')) {
+            return res.status(400).json({
+                error: 'Class date cannot be in the past',
+                invalidFields
+            })
+        }
+
+        // otherwise show number validation error
         return res.status(400).json({
             error: 'Capacity or price cannot be negative',
             invalidFields

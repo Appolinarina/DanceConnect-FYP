@@ -43,14 +43,18 @@ const BrowseFilters = ({
                 </button>
             </div>
 
-            {/* Filter toggle button */}
-            <button
-                type="button"
-                className="filter-toggle"
-                onClick={() => setShowFilters(!showFilters)}
-            >
-                {showFilters ? "Hide Filters" : "Show Filters"}
-            </button>
+            {/* Filter toggle intro + button */}
+            <div className="filter-toggle-section">
+                <p className="filter-toggle-text">Refine your results using filters</p>
+
+                <button
+                    type="button"
+                    className="filter-toggle"
+                    onClick={() => setShowFilters(!showFilters)}
+                >
+                    {showFilters ? "Hide Filter Options" : "Show Filter Options"}
+                </button>
+            </div>
 
             {/* Filter panel */}
             {showFilters && (

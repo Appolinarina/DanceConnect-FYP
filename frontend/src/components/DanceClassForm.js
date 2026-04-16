@@ -79,6 +79,7 @@ const DanceClassForm = ({ onSuccess }) => {
     return (
         <form className="create" onSubmit={handleSubmit}>
             <h3>Create New Dance Class</h3>
+            <p className="field-help">Please fill in all fields below to create a class</p>
 
             <label>Class Title:</label>
             <input
@@ -122,7 +123,7 @@ const DanceClassForm = ({ onSuccess }) => {
                 type="datetime-local"
                 onChange={(e) => setDate(e.target.value)}
                 value={date}
-                className={emptyFields.includes('date') ? 'error' : ''}
+                className={emptyFields.includes('date') || invalidFields.includes('date') ? 'error' : ''}
             />
             <p className="field-help">Click the calendar icon to select the date and time.</p>
 
@@ -136,19 +137,22 @@ const DanceClassForm = ({ onSuccess }) => {
             />
 
             <label>Price:</label>
-            <input
-                type="number"
-                min="0"
-                step="0.01" //increment/decrement by 0.01 (i.e. to have 2 d.p.)
-                onChange={(e) => setPrice(e.target.value)}
-                onBlur={() => {
-                    if (price === "") return
-                    const n = Number(price)
-                    if (!Number.isNaN(n)) setPrice(n.toFixed(2)) //onBlur 2 d.p. format shows up after user clicks away
-                }}
-                value={price}
-                className={emptyFields.includes('price') || invalidFields.includes("price") ? 'error' : ''}
-            />
+            <div className="currency-input-wrapper">
+                <span className="currency-symbol">€</span>
+                <input
+                    type="number"
+                    min="0"
+                    step="0.01" //increment/decrement by 0.01 (i.e. to have 2 d.p.)
+                    onChange={(e) => setPrice(e.target.value)}
+                    onBlur={() => {
+                        if (price === "") return
+                        const n = Number(price)
+                        if (!Number.isNaN(n)) setPrice(n.toFixed(2)) //onBlur 2 d.p. format shows up after user clicks away
+                    }}
+                    value={price}
+                    className={emptyFields.includes('price') || invalidFields.includes("price") ? 'error' : ''}
+                />
+            </div>
 
             <button>Create Class</button>
             {error && <div className="error">{error}</div>}

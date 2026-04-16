@@ -16,9 +16,9 @@
   --error: #c25843;
   --shadow-sm: 0 6px 18px rgba(79, 61, 36, 0.06);
   --shadow-md: 0 14px 32px rgba(79, 61, 36, 0.10);
-  --radius-sm: 10px;
-  --radius-md: 18px;
-  --radius-lg: 26px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
 }
 
 * {
@@ -116,7 +116,7 @@ nav a.active {
   border: 1px solid var(--border);
   color: var(--primary);
   padding: 8px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
 }
 
@@ -271,7 +271,7 @@ form.signup {
   border: none;
   color: #fffdf8;
   padding: 12px 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   cursor: pointer;
@@ -378,7 +378,7 @@ form.signup {
   border: none;
   color: #fffdf8;
   padding: 12px 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   cursor: pointer;
@@ -396,7 +396,7 @@ form.signup {
   border: none;
   color: #fffdf8;
   padding: 12px 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   cursor: pointer;
@@ -458,7 +458,7 @@ select {
   padding: 13px 14px;
   margin-bottom: 18px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   background: #fffdf9;
   color: var(--text);
   font-family: "Poppins", sans-serif;
@@ -480,13 +480,32 @@ select.error {
   background: #fff6f7;
 }
 
+/* currency input with euro symbol */
+.currency-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.currency-symbol {
+  flex-shrink: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.currency-input-wrapper input {
+  margin-bottom: 0;
+}
+
 /* profile page form */
 .profile-form textarea {
   width: 100%;
   padding: 13px 14px;
   margin-bottom: 10px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   background: #fffdf9;
   color: var(--text);
   font-family: "Poppins", sans-serif;
@@ -525,7 +544,7 @@ select.error {
   border: 1px solid var(--border);
   color: var(--primary);
   padding: 8px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-lg);
   font-size: 0.9rem;
 }
 
@@ -536,7 +555,7 @@ form button,
   border: none;
   color: #fffdf8;
   padding: 12px 18px;
-  border-radius: 80px;
+  border-radius: var(--radius-md);
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   cursor: pointer;
@@ -562,7 +581,7 @@ form button:hover,
 .card-action-btn {
   min-height: 48px;
   padding: 12px 22px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-family: "Poppins", sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
@@ -633,7 +652,7 @@ form button:hover,
   border: none;
   color: #fffdf8;
   padding: 12px 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   cursor: pointer;
@@ -652,7 +671,7 @@ form button:hover,
   color: var(--primary);
   border: 1.5px solid var(--border);
   padding: 12px 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   cursor: pointer;
@@ -670,15 +689,49 @@ form button:hover,
   cursor: not-allowed;
 }
 
+/*toggle filter button*/
+.filter-toggle {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-toggle:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+/* text for filter button*/
+.filter-toggle {
+  margin-bottom: 16px;
+}
+
+.filter-toggle-section {
+  margin-bottom: 16px;
+}
+
+.filter-toggle-text {
+  margin: 0 0 10px;
+  font-size: 0.92rem;
+  color: var(--text-soft);
+}
+
+
 /* secondary buttons */
 nav button,
-.filter-toggle,
 .filter-panel button {
   background: transparent;
   color: var(--accent);
   border: 1.5px solid var(--accent);
   padding: 10px 16px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 0.95rem;
@@ -687,15 +740,11 @@ nav button,
 }
 
 nav button:hover,
-.filter-toggle:hover,
 .filter-panel button:hover {
   background: var(--accent-soft);
   transform: translateY(-1px);
 }
 
-.filter-toggle {
-  margin-bottom: 16px;
-}
 
 /* error boxes */
 div.error {
@@ -703,7 +752,7 @@ div.error {
   background: #fff1f3;
   border: 1px solid #edb5bf;
   color: var(--error);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   margin: 16px 0;
 }
 
@@ -713,10 +762,10 @@ div.error {
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--primary);
+  background: var(--tertiary);
   color: #fffdf8;
   padding: 14px 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   z-index: 9999;
 }
@@ -746,7 +795,7 @@ div.error {
   border: none;
   color: #fffdf8;
   padding: 12px 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   cursor: pointer;
@@ -773,7 +822,7 @@ div.error {
   color: var(--primary);
   border: 1.5px solid var(--border);
   padding: 10px 16px;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 0.95rem;
@@ -875,6 +924,25 @@ div.error {
 
 .desktop-create-class {
   display: block;
+}
+
+/*login/signup criss cross*/
+.auth-switch-text {
+  margin-top: 18px;
+  margin-bottom: 0;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.auth-switch-text a {
+  color: var(--tertiary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-switch-text a:hover {
+  color: var(--secondary);
 }
 
 /* responsive */

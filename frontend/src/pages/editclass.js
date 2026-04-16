@@ -163,7 +163,7 @@ const EditClass = () => {
                     type="datetime-local"
                     onChange={(e) => setDate(e.target.value)}
                     value={date}
-                    className={emptyFields.includes("date") ? "error" : ""}
+                    className={emptyFields.includes('date') || invalidFields.includes('date') ? 'error' : ''}
                 />
                 <p className="field-help">Click the calendar icon to select the date and time.</p>
 
@@ -177,19 +177,22 @@ const EditClass = () => {
                 />
 
                 <label>Price:</label>
-                <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    onChange={(e) => setPrice(e.target.value)}
-                    onBlur={() => {
-                        if (price === "") return
-                        const n = Number(price)
-                        if (!Number.isNaN(n)) setPrice(n.toFixed(2))
-                    }}
-                    value={price}
-                    className={emptyFields.includes("price") || invalidFields.includes("price") ? "error" : ""}
-                />
+                <div className="currency-input-wrapper">
+                    <span className="currency-symbol">€</span>
+                    <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        onChange={(e) => setPrice(e.target.value)}
+                        onBlur={() => {
+                            if (price === "") return
+                            const n = Number(price)
+                            if (!Number.isNaN(n)) setPrice(n.toFixed(2))
+                        }}
+                        value={price}
+                        className={emptyFields.includes("price") || invalidFields.includes("price") ? "error" : ""}
+                    />
+                </div>
 
                 <div className="form-actions">
                     <button type="submit" className="primary-btn">
