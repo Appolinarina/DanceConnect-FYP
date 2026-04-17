@@ -16,7 +16,8 @@ const BrowseFilters = ({
     maxPrice,
     setMaxPrice,
     handleApplyFilters,
-    handleClearFilters
+    handleClearFilters,
+    priceRangeError
 }) => {
     return (
         <>
@@ -112,9 +113,17 @@ const BrowseFilters = ({
                             <label>Min Price</label>
                             <input
                                 type="number"
+                                min="0"
                                 value={minPrice}
                                 disabled={freeOnly}
-                                onChange={(e) => setMinPrice(e.target.value)}
+                                onChange={(e) => {
+                                    const value = e.target.value
+
+                                    // allow empty string, or any number 0 and above
+                                    if (value === "" || Number(value) >= 0) {
+                                        setMinPrice(value)
+                                    }
+                                }}
                             />
                         </div>
 
@@ -122,12 +131,27 @@ const BrowseFilters = ({
                             <label>Max Price</label>
                             <input
                                 type="number"
+                                min="0"
                                 value={maxPrice}
                                 disabled={freeOnly}
-                                onChange={(e) => setMaxPrice(e.target.value)}
+                                onChange={(e) => {
+                                    const value = e.target.value
+
+                                    // allow empty string, or any number 0 and above
+                                    if (value === "" || Number(value) >= 0) {
+                                        setMaxPrice(value)
+                                    }
+                                }}
                             />
                         </div>
                     </div>
+
+                    {/* show error if min price is above max price */}
+                    {priceRangeError && (
+                        <div className="error filter-price-error">
+                            Minimum price cannot be greater than maximum price
+                        </div>
+                    )}
 
                     {/* Row 3: Apply filters + clear filters buttons */}
                     <div className="filter-actions">

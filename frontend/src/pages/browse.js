@@ -42,6 +42,12 @@ const Browse = () => {
   //this is kept separate from the text box so pressing Enter only applies search
   const [appliedSearchTerm, setAppliedSearchTerm] = useState("")
 
+  // true if both price fields have values and min is bigger than max
+  const priceRangeError =
+    minPrice !== "" &&
+    maxPrice !== "" &&
+    Number(minPrice) > Number(maxPrice)
+
   //usebookings hook - booking and unbooking classes
   const { handleBook, handleUnbook } = useBookings(
     user,
@@ -102,6 +108,11 @@ const Browse = () => {
 
   // apply filters button handler (calls backend with current filter state)
   const handleApplyFilters = () => {
+    // stop if price range is invalid
+    if (priceRangeError) {
+      return
+    }
+
     // save the user's current filter inputs as the "last applied filters"
     const newAppliedFilters = {
       level: levelFilter,
@@ -176,7 +187,7 @@ const Browse = () => {
             Search available classes and refine the results using filters.
           </p>
 
-                    {/* mobile only upcoming classes toggle */}
+          {/* mobile only upcoming classes toggle */}
           <div className="mobile-upcoming-classes">
             <div className="mobile-upcoming-highlight">
               <p className="mobile-upcoming-kicker">Already booked a class?</p>
@@ -187,7 +198,10 @@ const Browse = () => {
               <button
                 type="button"
                 className="mobile-upcoming-toggle"
-                onClick={() => setShowUpcomingClasses(!showUpcomingClasses)}> {upcomingButtonText} </button>
+                onClick={() => setShowUpcomingClasses(!showUpcomingClasses)}
+              >
+                {upcomingButtonText}
+              </button>
             </div>
 
             {showUpcomingClasses && (
@@ -238,6 +252,7 @@ const Browse = () => {
             setMaxPrice={setMaxPrice}
             handleApplyFilters={handleApplyFilters}
             handleClearFilters={handleClearFilters}
+            priceRangeError={priceRangeError}
           />
 
           {classes.length === 0 && (

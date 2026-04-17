@@ -745,7 +745,6 @@ nav button:hover,
   transform: translateY(-1px);
 }
 
-
 /* error boxes */
 div.error {
   padding: 12px 14px;
@@ -754,6 +753,11 @@ div.error {
   color: var(--error);
   border-radius: var(--radius-md);
   margin: 16px 0;
+}
+
+.filter-price-error {
+  margin-top: -2px;
+  margin-bottom: 16px;
 }
 
 /* toast */
