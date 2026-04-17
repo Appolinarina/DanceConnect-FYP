@@ -55,18 +55,32 @@ describe('Delete Class', () => {
     cy.contains('Hip Hop Beginners').should('be.visible')
     cy.contains('Delete Class').should('be.visible')
 
-    // click delete class button
+    // click delete class button to open modal
     cy.contains('Delete Class').click()
+
+    // check confirmation modal appears
+    cy.contains('Delete Class: "Hip Hop Beginners"').should('be.visible')
+    cy.contains('Are you sure you want to delete this class? This action cannot be undone.').should('be.visible')
+
+    // confirm deletion in modal
+    cy.get('.modal-overlay').within(() => {
+      cy.contains('button', 'Delete').click()
+    })
 
     // wait for delete request to complete
     cy.wait('@deleteClass')
+
+    // check success toast appears
+    cy.get('.toast')
+      .should('be.visible')
+      .and('contain', 'Your class has been deleted')
 
     // check deleted class is removed from UI
     cy.contains('Hip Hop Beginners').should('not.exist')
     cy.contains('Delete Class').should('not.exist')
 
     // check empty state is shown after deleting only class
-    cy.contains('You have not created any classes yet. Use the form on the right to add your first class.')
+    cy.contains('You have not created any classes yet. Use the create class form to add your first class.')
       .should('be.visible')
   })
 
@@ -118,8 +132,21 @@ describe('Delete Class', () => {
     // wait for initial classes request to complete
     cy.wait('@getMyClasses')
 
-    // try to delete class
+    // check class is shown before attempting delete
+    cy.contains('Salsa Open').should('be.visible')
+    cy.contains('Delete Class').should('be.visible')
+
+    // click delete class button to open modal
     cy.contains('Delete Class').click()
+
+    // check confirmation modal appears
+    cy.contains('Delete Class: "Salsa Open"').should('be.visible')
+    cy.contains('Are you sure you want to delete this class? This action cannot be undone.').should('be.visible')
+
+    // confirm deletion in modal
+    cy.get('.modal-overlay').within(() => {
+      cy.contains('button', 'Delete').click()
+    })
 
     // wait for failed delete request
     cy.wait('@deleteClass')

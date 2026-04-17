@@ -44,7 +44,7 @@ describe('Create Class Page', () => {
     cy.contains('h3', 'Create New Dance Class').should('be.visible')
 
     // check empty state is shown when user has no created classes
-    cy.contains('You have not created any classes yet. Use the form on the right to add your first class.')
+    cy.contains('You have not created any classes yet. Use the create class form to add your first class.')
       .should('be.visible')
 
     // check key form fields are shown
@@ -127,7 +127,7 @@ describe('Create Class Page', () => {
     // check success toast appears
     cy.get('.toast')
       .should('be.visible')
-      .and('contain', 'Your class has been successfully created')
+      .and('contain', 'Your class has been created')
 
     // check newly created class appears in the UI
     cy.contains('Hip Hop Beginners').should('be.visible')

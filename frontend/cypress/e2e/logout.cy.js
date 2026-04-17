@@ -44,7 +44,7 @@ describe('Logout', () => {
     // check logout toast appears
     cy.get('.toast')
       .should('be.visible')
-      .and('contain', 'You have successfully logged out')
+      .and('contain', 'You are now logged out')
 
     // check navbar now shows logged out state
     cy.contains('Login').should('be.visible')

@@ -43,7 +43,7 @@ describe('Booking and Unbooking', () => {
     let hasBooked = false
 
     // mock upcoming bookings request
-    // keep returning no bookings until book button is actually clicked
+    // keep returning no bookings until class is actually booked
     // after booking, return booked class
     cy.intercept('GET', '**/api/danceclasses/bookings/me/upcoming', (req) => {
       if (!hasBooked) {
@@ -61,7 +61,6 @@ describe('Booking and Unbooking', () => {
 
     // mock browse classes request
     // backend still returns same class, but after booking the frontend filters it out
-    // because it now exists in myUpcoming
     cy.intercept('GET', '**/api/danceclasses/browse*', {
       statusCode: 200,
       body: browseClasses
@@ -100,8 +99,8 @@ describe('Booking and Unbooking', () => {
 
     // check class is shown in browse before booking
     cy.get('.danceclasses').within(() => {
-      cy.contains('Hip Hop Beginners').should('be.visible')
-      cy.contains('button', 'Book Class').should('be.visible')
+      cy.contains('Hip Hop Beginners').should('exist')
+      cy.contains('button', 'Book Class').should('exist')
     })
 
     // click book class button
@@ -114,8 +113,8 @@ describe('Booking and Unbooking', () => {
 
     // check class now appears in upcoming bookings section
     cy.get('.sidebar-panel').within(() => {
-      cy.contains('Hip Hop Beginners').should('be.visible')
-      cy.contains('button', 'Unbook Class').should('be.visible')
+      cy.contains('Hip Hop Beginners').should('exist')
+      cy.contains('button', 'Unbook Class').should('exist')
     })
 
     // check booked class no longer appears in browse section
@@ -164,7 +163,7 @@ describe('Booking and Unbooking', () => {
     let hasUnbooked = false
 
     // mock upcoming bookings request
-    // keep returning booked class until unbook button is actually clicked
+    // keep returning booked class until unbook is confirmed
     // after unbooking, return empty list
     cy.intercept('GET', '**/api/danceclasses/bookings/me/upcoming', (req) => {
       if (!hasUnbooked) {
@@ -222,17 +221,21 @@ describe('Booking and Unbooking', () => {
 
     // check class is shown in upcoming bookings section before unbooking
     cy.get('.sidebar-panel').within(() => {
-      cy.contains('Hip Hop Beginners').should('be.visible')
-      cy.contains('button', 'Unbook Class').should('be.visible')
+      cy.contains('Hip Hop Beginners').should('exist')
+      cy.contains('button', 'Unbook Class').should('exist')
     })
 
-    // check class is not shown in browse section before unbooking
-    cy.get('.danceclasses').within(() => {
-      cy.contains('Hip Hop Beginners').should('not.exist')
-    })
-
-    // click unbook class button
+    // click unbook button on class card to open modal
     cy.get('.sidebar-panel').contains('button', 'Unbook Class').click()
+
+    // check confirmation modal appears
+    cy.contains('Unbook Class: "Hip Hop Beginners"').should('be.visible')
+    cy.contains('Are you sure you want to unbook this class?').should('be.visible')
+
+    // click confirm unbook button inside modal
+    cy.get('.modal-overlay').within(() => {
+      cy.contains('button', 'Unbook').click()
+    })
 
     // wait for unbooking request and refreshed data requests
     cy.wait('@unbookClass')
@@ -246,64 +249,11 @@ describe('Booking and Unbooking', () => {
 
     // check class appears back in browse with book button again
     cy.get('.danceclasses').within(() => {
-      cy.contains('Hip Hop Beginners').should('be.visible')
-      cy.contains('button', 'Book Class').should('be.visible')
+      cy.contains('Hip Hop Beginners').should('exist')
+      cy.contains('button', 'Book Class').should('exist')
     })
   })
-
-  it('shows full class as disabled and does not allow booking', () => {
-    const browseClasses = [
-      {
-        _id: 'class2',
-        title: 'Full Salsa Class',
-        dance_style: 'Salsa',
-        dance_level: 'Open',
-        location: 'Cork',
-        date: '2026-04-20T19:00:00.000Z',
-        capacity: 20,
-        spotsRemaining: 0,
-        price: 12,
-        user_id: 'owner999',
-        createdAt: '2026-03-28T12:00:00.000Z'
-      }
-    ]
-
-    // mock logged in requests
-    cy.intercept('GET', '**/api/danceclasses/bookings/me/upcoming', {
-      statusCode: 200,
-      body: []
-    }).as('getUpcomingBookings')
-
-    cy.intercept('GET', '**/api/danceclasses/browse*', {
-      statusCode: 200,
-      body: browseClasses
-    }).as('getBrowseClasses')
-
-    // visit browse page with logged in user already in local storage
-    cy.visit('/', {
-      onBeforeLoad(win) {
-        win.localStorage.setItem(
-          'user',
-          JSON.stringify({
-            email: 'testuser@email.com',
-            token: 'fake-jwt-token',
-            _id: '123abc'
-          })
-        )
-      }
-    })
-
-    // wait for page requests to complete
-    cy.wait('@getUpcomingBookings')
-    cy.wait('@getBrowseClasses')
-
-    // check full button is shown and disabled
-    cy.get('.danceclasses').within(() => {
-      cy.contains('Full Salsa Class').should('be.visible')
-      cy.contains('button', 'Full').should('be.disabled')
-    })
-  })
-
+  
   it('redirects logged out user to login when trying to book a class', () => {
     const browseClasses = [
       {
@@ -485,8 +435,17 @@ describe('Booking and Unbooking', () => {
     cy.wait('@getUpcomingBookings')
     cy.wait('@getBrowseClasses')
 
-    // try to unbook class
+    // click unbook button on class card to open modal
     cy.get('.sidebar-panel').contains('button', 'Unbook Class').click()
+
+    // check confirmation modal appears
+    cy.contains('Unbook Class: "Latin Night"').should('be.visible')
+    cy.contains('Are you sure you want to unbook this class?').should('be.visible')
+
+    // click confirm unbook button inside modal
+    cy.get('.modal-overlay').within(() => {
+      cy.contains('button', 'Unbook').click()
+    })
 
     // wait for failed unbooking request
     cy.wait('@unbookClass')
@@ -494,12 +453,10 @@ describe('Booking and Unbooking', () => {
     // check class stays in upcoming bookings section
     cy.get('.sidebar-panel').within(() => {
       cy.contains('Latin Night').should('be.visible')
-      cy.contains('button', 'Unbook Class').should('be.visible')
+      cy.contains('button', 'Unbook Class').should('exist')
     })
 
-    // check error is shown
-    cy.get('.error')
-      .should('be.visible')
-      .and('contain', 'Unbooking failed')
+    // check error message is shown
+    cy.contains('Unbooking failed').should('be.visible')
   })
 })

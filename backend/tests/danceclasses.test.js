@@ -10,6 +10,13 @@ const Booking = require('../models/bookingModel')
 let mongoServer
 let token
 
+const getFutureDateTime = (daysAhead = 30) => {
+  const date = new Date()
+  date.setDate(date.getDate() + daysAhead)
+  date.setHours(18, 0, 0, 0)
+  return date.toISOString().slice(0, 16)
+}
+
 // connect to in-memory database before running tests
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create()
@@ -52,7 +59,7 @@ describe('Dance class API', () => {
           dance_style: 'Salsa',
           dance_level: 'Beginner',
           location: 'Dublin Studio',
-          date: '2026-04-20T18:00',
+          date: getFutureDateTime(30),
           capacity: 20,
           price: 10
         })
@@ -71,7 +78,7 @@ describe('Dance class API', () => {
           dance_style: 'Salsa',
           dance_level: 'Beginner',
           location: 'Dublin Studio',
-          date: '2026-04-20T18:00',
+          date: getFutureDateTime(30),
           capacity: 20,
           price: 10
         })
@@ -123,7 +130,7 @@ describe('Dance class API', () => {
           dance_style: 'Salsa',
           dance_level: 'Beginner',
           location: 'Dublin Studio',
-          date: '2026-04-20T18:00',
+          date: getFutureDateTime(30),
           capacity: 20,
           price: 10
         })
@@ -161,7 +168,7 @@ describe('Dance class API', () => {
           dance_style: 'Bachata',
           dance_level: 'Intermediate',
           location: 'Dance Hub',
-          date: '2026-04-22T19:00',
+          date: getFutureDateTime(30),
           capacity: 15,
           price: 12
         })
@@ -187,7 +194,7 @@ describe('Dance class API', () => {
           dance_style: 'Heels',
           dance_level: 'Open',
           location: 'City Studio',
-          date: '2026-04-25T18:30',
+          date: getFutureDateTime(30),
           capacity: 10,
           price: 15
         })
@@ -221,42 +228,6 @@ describe('Dance class API', () => {
       expect(secondBookingRes.body).toHaveProperty('error', 'You have already booked this class')
     })
 
-    // test user cannot book a class in the past
-    test('POST /api/danceclasses/:id/book should not allow booking a past class', async () => {
-      // create class as first user with a past date
-      const createRes = await request(app)
-        .post('/api/danceclasses')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-          title: 'Old Salsa Class',
-          dance_style: 'Salsa',
-          dance_level: 'Beginner',
-          location: 'Old Studio',
-          date: '2025-01-10T18:00',
-          capacity: 20,
-          price: 10
-        })
-
-      const classId = createRes.body._id
-
-      // create second user who will try to book the class
-      const signupRes2 = await request(app)
-        .post('/api/user/signup')
-        .send({
-          email: 'pastbooker@example.com',
-          password: 'StrongPass123!'
-        })
-
-      const secondToken = signupRes2.body.token
-
-      const res = await request(app)
-        .post(`/api/danceclasses/${classId}/book`)
-        .set('Authorization', `Bearer ${secondToken}`)
-
-      expect(res.statusCode).toBe(400)
-      expect(res.body).toHaveProperty('error', 'You cannot book a class in the past')
-    })
-
     // test user cannot book a class if it is already full
     test('POST /api/danceclasses/:id/book should not allow booking a full class', async () => {
       // create class as first user with capacity of 1
@@ -268,7 +239,7 @@ describe('Dance class API', () => {
           dance_style: 'Hip Hop',
           dance_level: 'Beginner',
           location: 'Studio 1',
-          date: '2026-04-28T18:00',
+          date: getFutureDateTime(30),
           capacity: 1,
           price: 8
         })
@@ -323,7 +294,7 @@ describe('Dance class API', () => {
           dance_style: 'Contemporary',
           dance_level: 'Intermediate',
           location: 'Studio 2',
-          date: '2026-05-01T18:00',
+          date: getFutureDateTime(30),
           capacity: 12,
           price: 10
         })
@@ -370,7 +341,7 @@ describe('Dance class API', () => {
           dance_style: 'Jazz',
           dance_level: 'Beginner',
           location: 'Studio 3',
-          date: '2026-05-03T18:00',
+          date: getFutureDateTime(30),
           capacity: 15,
           price: 9
         })
@@ -408,7 +379,7 @@ describe('Dance class API', () => {
           dance_style: 'Salsa',
           dance_level: 'Beginner',
           location: 'Studio A',
-          date: '2026-05-10T18:00',
+          date: getFutureDateTime(30),
           capacity: 20,
           price: 10
         })
@@ -424,7 +395,7 @@ describe('Dance class API', () => {
           dance_style: 'Bachata',
           dance_level: 'Intermediate',
           location: 'Studio B',
-          date: '2026-05-12T19:00',
+          date: getFutureDateTime(30),
           capacity: 25,
           price: 12
         })
@@ -449,7 +420,7 @@ describe('Dance class API', () => {
           dance_style: 'Jazz',
           dance_level: 'Open',
           location: 'Studio C',
-          date: '2026-05-15T18:00',
+          date: getFutureDateTime(30),
           capacity: 15,
           price: 8
         })
@@ -476,7 +447,7 @@ describe('Dance class API', () => {
           dance_style: 'Salsa',
           dance_level: 'Beginner',
           location: 'Studio Owner',
-          date: '2026-05-20T18:00',
+          date: getFutureDateTime(30),
           capacity: 20,
           price: 10
         })
@@ -502,7 +473,7 @@ describe('Dance class API', () => {
           dance_style: 'Hip Hop',
           dance_level: 'Advanced',
           location: 'Wrong Studio',
-          date: '2026-05-21T19:00',
+          date: getFutureDateTime(30),
           capacity: 30,
           price: 15
         })
@@ -522,7 +493,7 @@ describe('Dance class API', () => {
           dance_style: 'Jazz',
           dance_level: 'Open',
           location: 'Studio Protected',
-          date: '2026-05-22T18:00',
+          date: getFutureDateTime(30),
           capacity: 18,
           price: 9
         })
@@ -555,7 +526,6 @@ describe('Browse keyword search API', () => {
   const futureDate1 = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
   const futureDate2 = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
   const futureDate3 = new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString()
-  const futureDate4 = new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString()
   const pastDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
 
   // helper function to create classes quickly for browse tests

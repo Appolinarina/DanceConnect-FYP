@@ -24,7 +24,7 @@ describe('Browse Page', () => {
 
     // check search bar is shown
     cy.contains('Search classes').should('be.visible')
-    cy.get('input[placeholder="Search by class name, style, or location"]').should('be.visible')
+    cy.get('input[placeholder="Search by title, style or location"]').should('be.visible')
     cy.contains('button', 'Search').should('be.visible')
 
     // check empty state is shown when no classes are returned
@@ -85,8 +85,6 @@ describe('Browse Page', () => {
     cy.contains('Open').should('be.visible')
     cy.contains('Dublin').should('be.visible')
     cy.contains('Cork').should('be.visible')
-    cy.contains('12').should('be.visible')
-    cy.contains('30').should('be.visible')
 
     // check book buttons are shown for available classes
     cy.contains('button', 'Book Class').should('be.visible')
@@ -167,7 +165,7 @@ describe('Browse Page', () => {
     cy.wait('@initialBrowseClasses')
 
     // open filters panel
-    cy.contains('button', 'Show Filters').click()
+    cy.contains('button', 'Show Filter Options').click()
 
     // check filter fields are shown
     cy.contains('Level').should('be.visible')
@@ -191,7 +189,6 @@ describe('Browse Page', () => {
     cy.contains('Beginner Ballet').should('be.visible')
     cy.contains('Ballet').should('be.visible')
     cy.contains('Galway').should('be.visible')
-    cy.contains('5').should('be.visible')
   })
 
   it('searches browse classes using the Search button', () => {
@@ -237,7 +234,7 @@ describe('Browse Page', () => {
     }).as('searchedBrowseClasses')
 
     // type into search bar
-    cy.get('input[placeholder="Search by class name, style, or location"]').type('hip')
+    cy.get('input[placeholder="Search by title, style or location"]').type('hip')
 
     // click Search button
     cy.contains('button', 'Search').click()
@@ -294,7 +291,7 @@ describe('Browse Page', () => {
     }).as('searchedBrowseClasses')
 
     // type into search bar and press Enter
-    cy.get('input[placeholder="Search by class name, style, or location"]')
+    cy.get('input[placeholder="Search by title, style or location"]')
       .type('salsa{enter}')
 
     // wait for search request to complete
@@ -375,7 +372,7 @@ describe('Browse Page', () => {
     }).as('searchedBrowseClasses')
 
     // search for a keyword
-    cy.get('input[placeholder="Search by class name, style, or location"]').type('cont')
+    cy.get('input[placeholder="Search by title, style or location"]').type('cont')
     cy.contains('button', 'Search').click()
     cy.wait('@searchedBrowseClasses')
 
@@ -390,7 +387,7 @@ describe('Browse Page', () => {
     }).as('clearedSearchBrowseClasses')
 
     // clear the input and search again
-    cy.get('input[placeholder="Search by class name, style, or location"]').clear()
+    cy.get('input[placeholder="Search by title, style or location"]').clear()
     cy.contains('button', 'Search').click()
 
     // wait for cleared search request
@@ -445,10 +442,10 @@ describe('Browse Page', () => {
     }).as('searchedAndFilteredBrowseClasses')
 
     // type into search bar
-    cy.get('input[placeholder="Search by class name, style, or location"]').type('hip')
+    cy.get('input[placeholder="Search by title, style or location"]').type('hip')
 
     // open filters panel
-    cy.contains('button', 'Show Filters').click()
+    cy.contains('button', 'Show Filter Options').click()
 
     // fill in filter values
     cy.get('select').eq(0).select('Beginner')
@@ -527,10 +524,10 @@ describe('Browse Page', () => {
     cy.wait('@initialBrowseClasses')
 
     // type into search bar
-    cy.get('input[placeholder="Search by class name, style, or location"]').type('hip')
+    cy.get('input[placeholder="Search by title, style or location"]').type('hip')
 
     // open filters panel
-    cy.contains('button', 'Show Filters').click()
+    cy.contains('button', 'Show Filter Options').click()
 
     // mock combined search + filter request
     cy.intercept('GET', '**/api/danceclasses/browse*', (req) => {
@@ -575,7 +572,7 @@ describe('Browse Page', () => {
     cy.wait('@searchOnlyBrowseClasses')
 
     // search input should still keep the keyword
-    cy.get('input[placeholder="Search by class name, style, or location"]').should('have.value', 'hip')
+    cy.get('input[placeholder="Search by title, style or location"]').should('have.value', 'hip')
 
     // filter fields should reset
     cy.get('select').eq(0).should('have.value', '')

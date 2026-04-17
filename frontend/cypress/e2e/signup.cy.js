@@ -53,7 +53,7 @@ describe('Signup Page', () => {
     // check success toast appears
     cy.get('.toast')
       .should('be.visible')
-      .and('contain', 'You have successfully signed up and logged in')
+      .and('contain', 'You have signed up and logged in')
 
     // check user is redirected to home page
     cy.location('pathname').should('eq', '/')
